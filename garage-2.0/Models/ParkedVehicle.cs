@@ -6,9 +6,11 @@ namespace garage_2._0.Models
     {
         public int Id { get; set; }
         public required string RegistrationNumber { get; set; }
-        public VehicleType Type { get; set; }
+        public required VehicleType Type { get; set; }
         public required string Brand { get; set; }
         public required string Model { get; set; }
-        public int Wheels { get; set; }
+        public required int Wheels { get; set; }
+        public required DateTime RegisteredAt { get; set; }
+        public Color Color { get; set; }
     }
 }
