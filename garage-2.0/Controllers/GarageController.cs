@@ -1,13 +1,16 @@
 ﻿using garage_2._0.Models;
+using garage_2._0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace garage_2._0.Controllers
 {
+
+
     public class GarageController(GarageDbContext context) : Controller
     {
 
-        private readonly GarageDbContext _context = context;
+        private readonly GarageRepository _repository = new(context);
 
         // use GarageViewModel?
         public IActionResult Index()
@@ -23,7 +26,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _context.Garages.FirstOrDefaultAsync(g => g.ID == id);
+            var garage = await _repository.GetById(id);
 
             if (garage == null)
             {
@@ -47,7 +50,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _context.Garages.FirstOrDefaultAsync(g => g.ID == id);
+            var garage = await _repository.GetById(id);
 
             if (garage == null)
             {
@@ -71,8 +74,7 @@ namespace garage_2._0.Controllers
             {
                 try
                 {
-                    _context.Update(garage);
-                    await _context.SaveChangesAsync();
+                    await _repository.Update(garage);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -94,28 +96,20 @@ namespace garage_2._0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var garage = await _context.Garages.FindAsync(id);
-            if (garage != null)
-            {
-                _context.Garages.Remove(garage);
-            }
-
-            await _context.SaveChangesAsync();
+            await _repository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-
         public async Task<IActionResult> List()
         {
-            var garages = await _context.Garages.ToListAsync();
-
             // use GarageViewModel
+            var garages = await _repository.All();
 
             return View(garages);
         }
         private bool GarageExists(int id)
         {
-            return _context.Garages.Any(g => g.ID == id);
+            return _repository.Any(id);
         }
     }
 }
