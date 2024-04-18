@@ -1,47 +1,64 @@
 ﻿using garage_2._0.Models;
+using Garage_2._0.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace garage_2._0.Repositories
+namespace Garage_2_0.Repositories;
+
+public class GarageRepository(GarageDbContext context) : IRepository<Garage>
 {
-    public class GarageRepository(GarageDbContext context) : IRepository<Garage>
+
+    private GarageDbContext _context = context;
+
+    public async Task<IEnumerable<Garage?>> All()
     {
-        private readonly GarageDbContext _context = context;
+        var garages = await _context.Garages.ToListAsync();
+        return garages;
+    }
 
-        public async Task<Garage?> GetById(int id)
+    public async Task<bool> Any(Func<Garage, bool> predicate)
+    {
+        bool any = await Task.Run(() => { return _context.Garages.Any(predicate); });
+        return any;
+    }
+
+    public async Task<IEnumerable<Garage?>> FindMany(Func<Garage, bool> predicate)
+    {
+        var garages = await Task.Run(() =>
         {
-            var garage = await _context.Garages.FirstOrDefaultAsync(g => g.ID == id);
+            return _context.Garages.Where(predicate).ToList();
+        });
+        return garages;
+    }
 
-            return garage;
-        }
+    public async Task<Garage> Create(Garage entity)
+    {
+        var createdGarage = await _context.Garages.AddAsync(entity);
+        await _context.SaveChangesAsync();
+        return createdGarage.Entity;
+    }
 
-        public async Task Update(Garage garage)
+    public async Task<Garage?> Delete(int id)
+    {
+        var garageToDelete = await _context.Garages.FirstOrDefaultAsync(g => g.Id == id);
+        if (garageToDelete != null)
         {
-            _context.Update(garage);
+            var deletedGarage = _context.Garages.Remove(garageToDelete).Entity;
             await _context.SaveChangesAsync();
+            return deletedGarage;
         }
+        return null;
+    }
 
-        public async Task Delete(int id)
-        {
-            var garage = await GetById(id);
-            if (garage != null)
-            {
-                _context.Garages.Remove(garage);
-            }
+    public async Task<Garage?> Find(Func<Garage, bool> predicate)
+    {
+        var garage = await _context.Garages.FindAsync(predicate);
+        return garage;
+    }
 
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Garage?>> All()
-        {
-            var garages = await _context.Garages.ToListAsync();
-
-            return garages;
-        }
-
-        public bool Any(int id)
-        {
-            return _context.Garages.Any(g => g.ID == id);
-        }
-
+    public async Task<Garage> Update(Garage entity)
+    {
+        var updatedGarage = _context.Garages.Update(entity).Entity;
+        await _context.SaveChangesAsync();
+        return updatedGarage;
     }
 }
