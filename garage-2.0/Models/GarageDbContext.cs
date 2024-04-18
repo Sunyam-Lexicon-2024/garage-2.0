@@ -14,6 +14,7 @@ namespace garage_2._0.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Garage>().ToTable("Garage");
             modelBuilder.Entity<Garage>().HasData(new Garage
             {
                 ID = 1,
@@ -21,6 +22,7 @@ namespace garage_2._0.Models
                 MaxCapacity = 50,
             });
 
+            modelBuilder.Entity<ParkedVehicle>().ToTable("ParkedVehicle");
             var vehicles = GetParkedVehiclesData();
             modelBuilder.Entity<ParkedVehicle>().HasData(vehicles);
         }
