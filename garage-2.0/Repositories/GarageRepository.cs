@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace garage_2._0.Repositories
 {
-    public class GarageRepository(GarageDbContext context)
+    public class GarageRepository(GarageDbContext context) : IRepository<Garage>
     {
         private readonly GarageDbContext _context = context;
 
@@ -31,7 +31,7 @@ namespace garage_2._0.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Garage>> All()
+        public async Task<IEnumerable<Garage?>> All()
         {
             var garages = await _context.Garages.ToListAsync();
 
@@ -42,5 +42,6 @@ namespace garage_2._0.Repositories
         {
             return _context.Garages.Any(g => g.ID == id);
         }
+
     }
 }
