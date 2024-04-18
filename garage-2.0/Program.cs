@@ -20,7 +20,7 @@ app.UseMvc(config =>
 {
     config.MapRoute(
         name: "default",
-        template: "{controller=Vehicle}/{action=List}/{id?}");
+        template: "{controller=Vehicle}/{action=Index}/{id?}");
 });
 
 app.UseRouting();
