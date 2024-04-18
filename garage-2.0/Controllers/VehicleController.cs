@@ -1,5 +1,6 @@
 ﻿using garage_2._0.Models;
 using garage_2._0.Repositories;
+using garage_2._0.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace garage_2._0.Controllers
@@ -12,7 +13,7 @@ namespace garage_2._0.Controllers
         {
             var vehicles = await _repository.All();
 
-            var model = vehicles.Select(x => new ParkedVehicle
+            var model = vehicles.Select(x => new ParkedVehicleViewModel
             {
                 Id = x.Id,
                 RegistrationNumber = x.RegistrationNumber,
@@ -22,7 +23,7 @@ namespace garage_2._0.Controllers
                 Wheels = x.Wheels,
                 RegisteredAt = x.RegisteredAt,
                 Color = x.Color,
-            });
+            }).ToList();
 
             return View(model);
         }
