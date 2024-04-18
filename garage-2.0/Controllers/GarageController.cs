@@ -26,7 +26,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.GetById(id);
+            var garage = await _repository.GetById((int)id);
 
             if (garage == null)
             {
@@ -50,7 +50,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.GetById(id);
+            var garage = await _repository.GetById((int)id);
 
             if (garage == null)
             {
