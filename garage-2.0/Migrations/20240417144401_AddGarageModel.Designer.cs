@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using garage_2._0.Models;
 
@@ -11,9 +12,11 @@ using garage_2._0.Models;
 namespace garage_2._0.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    partial class GarageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240417144401_AddGarageModel")]
+    partial class AddGarageModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
