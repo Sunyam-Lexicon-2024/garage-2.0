@@ -1,4 +1,5 @@
 using garage_2._0.Models;
+using garage_2._0.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ IServiceCollection services = builder.Services;
 
 services.AddControllersWithViews(options => options.EnableEndpointRouting = false);
 services.AddDbContext<GarageDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Default")));
+
+// Register repositories to DI container
+services.AddTransient<IRepository<ParkedVehicle>, ParkedVehicleRepository>();
 
 var app = builder.Build();
 
