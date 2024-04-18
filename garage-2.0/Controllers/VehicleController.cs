@@ -1,29 +1,40 @@
 ﻿using garage_2._0.Models;
+using garage_2._0.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
-
 
 namespace garage_2._0.Controllers
 {
-    public class VehicleController : Controller
+    public class VehicleController(IRepository<ParkedVehicle> repository) : Controller
     {
-        private readonly GarageDbContext _context;
+        private IRepository<ParkedVehicle> _repository = repository;
 
-        public VehicleController(GarageDbContext context)
+        public async Task<IActionResult> Index()
         {
-            _context = context;
+            var vehicles = await _repository.All();
+
+            var model = vehicles.Select(x => new ParkedVehicle
+            {
+                Id = x.Id,
+                RegistrationNumber = x.RegistrationNumber,
+                Type = x.Type,
+                Brand = x.Brand,
+                Model = x.Model,
+                Wheels = x.Wheels,
+                RegisteredAt = x.RegisteredAt,
+                Color = x.Color,
+            });
+
+            return View(model);
         }
 
-        // GET: Vehicle/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Vehicle/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegistrationNumber, Type, Brand, Model, Wheels, RegisteredAt, Color")] ParkedVehicle viewModel)
+        public async Task<IActionResult> Create(ParkedVehicle viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -38,18 +49,11 @@ namespace garage_2._0.Controllers
                     Color = viewModel.Color
                 };
 
-                _context.ParkedVehicles.Add(vehicle);
-                await _context.SaveChangesAsync();
+                await _repository.Create(vehicle);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
-        }
-
-        // GET: Vehicle/Index
-        public IActionResult Index()
-        {
-            var vehicles = _context.ParkedVehicles.ToList();
-            return View(vehicles);
         }
     }
 }
