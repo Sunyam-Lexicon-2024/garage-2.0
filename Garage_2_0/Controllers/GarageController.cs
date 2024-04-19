@@ -43,10 +43,18 @@ namespace Garage_2_0.Controllers
             return View(garage);
         }
 
-        // use GarageDetailedViewModel
+
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Garage garage)
+        {
+            var createdGarage = await _repository.Create(garage);
+            return View(createdGarage);
         }
 
         // use GarageDetailedViewModel
