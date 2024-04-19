@@ -1,4 +1,4 @@
-﻿namespace garage_2._0.Enums
+﻿namespace garage_2._0.Models.Enums
 {
     public enum Color
     {
