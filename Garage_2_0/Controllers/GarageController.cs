@@ -1,5 +1,6 @@
 ﻿using Garage_2_0.Models;
 using Garage_2_0.Repositories;
+using Garage_2_0.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +9,20 @@ namespace Garage_2_0.Controllers
 
     public class GarageController(IRepository<Garage> repository) : Controller
     {
-
         private readonly IRepository<Garage> _repository = repository;
 
-        // use GarageViewModel?
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var garages = await _repository.All();
+
+            var model = garages.Select(x => new GarageViewModel
+            {
+                Id = x.ID,
+                Name = x.Name,
+                MaxCapacity = x.MaxCapacity
+            });
+
+            return View(model);
         }
 
         // use GarageDetailedViewModel
@@ -77,7 +85,7 @@ namespace Garage_2_0.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await GarageExists(garage.ID))
+                    if (!await _repository.Any(g => g.ID == id))
                     {
                         return NotFound();
                     }
@@ -97,18 +105,6 @@ namespace Garage_2_0.Controllers
         {
             await _repository.Delete(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> List()
-        {
-            // use GarageViewModel
-            var garages = await _repository.All();
-
-            return View(garages);
-        }
-        private async Task<bool> GarageExists(int id)
-        {
-            return await _repository.Any(g => g.ID == id);
         }
     }
 }
