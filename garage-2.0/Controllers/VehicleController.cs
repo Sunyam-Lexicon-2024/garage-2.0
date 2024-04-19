@@ -1,9 +1,9 @@
-﻿using garage_2._0.Models;
-using garage_2._0.Repositories;
-using garage_2._0.ViewModels;
+﻿using Garage_2_0.Models;
+using Garage_2_0.Repositories;
+using Garage_2_0.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace garage_2._0.Controllers
+namespace Garage_2_0.Controllers
 {
     public class VehicleController(IRepository<ParkedVehicle> repository) : Controller
     {

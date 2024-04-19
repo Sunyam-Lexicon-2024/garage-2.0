@@ -1,7 +1,7 @@
-﻿using garage_2._0.Data.EntityConfigurations;
+﻿using Garage_2_0.Data.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace garage_2._0.Models
+namespace Garage_2_0.Models
 {
     public class GarageDbContext : DbContext
     {

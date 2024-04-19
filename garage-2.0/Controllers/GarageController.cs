@@ -1,9 +1,9 @@
-﻿using garage_2._0.Models;
+﻿using Garage_2_0.Models;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace garage_2._0.Controllers
+namespace Garage_2_0.Controllers
 {
 
     public class GarageController(GarageDbContext context) : Controller
@@ -77,7 +77,7 @@ namespace garage_2._0.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!(await GarageExists(garage.ID)))
+                    if (!await GarageExists(garage.ID))
                     {
                         return NotFound();
                     }
