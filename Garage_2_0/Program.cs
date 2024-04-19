@@ -12,6 +12,7 @@ services.AddDbContext<GarageDbContext>(options => options.UseSqlServer(configura
 
 // Register repositories to DI container
 services.AddTransient<IRepository<ParkedVehicle>, ParkedVehicleRepository>();
+services.AddTransient<IRepository<Garage>, GarageRepository>();
 
 var app = builder.Build();
 

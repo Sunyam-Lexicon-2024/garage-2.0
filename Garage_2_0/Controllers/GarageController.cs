@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Garage_2_0.Controllers
 {
 
-    public class GarageController(GarageDbContext context) : Controller
+    public class GarageController(IRepository<Garage> repository) : Controller
     {
 
-        private readonly GarageRepository _repository = new(context);
+        private readonly IRepository<Garage> _repository = repository;
 
         // use GarageViewModel?
         public IActionResult Index()
