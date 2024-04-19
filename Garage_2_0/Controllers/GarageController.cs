@@ -15,11 +15,11 @@ namespace Garage_2_0.Controllers
         {
             var garages = await _repository.All();
 
-            var model = garages.Select(x => new GarageViewModel
+            var model = garages.Select(g => new GarageViewModel
             {
-                Id = x.ID,
-                Name = x.Name,
-                MaxCapacity = x.MaxCapacity
+                Id = g.ID,
+                Name = g.Name,
+                MaxCapacity = g.MaxCapacity
             });
 
             return View(model);
