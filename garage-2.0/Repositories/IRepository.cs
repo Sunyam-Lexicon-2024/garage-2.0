@@ -1,8 +1,7 @@
-﻿namespace Garage_2._0.Repositories;
+namespace Garage_2._0.Repositories;
 
 public interface IRepository<T> where T : class
 {
-
     public Task<IEnumerable<T>> All();
     public Task<IEnumerable<T>> Find(Func<T, bool> predicate);
     public Task<T> Create(T entity);

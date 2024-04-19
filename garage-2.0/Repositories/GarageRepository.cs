@@ -1,4 +1,4 @@
-﻿using garage_2._0.Models;
+using garage_2._0.Models;
 using Garage_2._0.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         var garages = await _context.Garages.ToListAsync();
         return garages;
     }
-
+    
     public async Task<bool> Any(Func<Garage, bool> predicate)
     {
         bool any = await Task.Run(() => { return _context.Garages.Any(predicate); });
