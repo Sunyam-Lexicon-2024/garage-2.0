@@ -1,4 +1,5 @@
 ﻿using garage_2._0.Models;
+using garage_2._0.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
