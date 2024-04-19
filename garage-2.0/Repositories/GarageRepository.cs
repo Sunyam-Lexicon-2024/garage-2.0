@@ -7,9 +7,14 @@ namespace garage_2._0.Repositories
     {
         private readonly GarageDbContext _context = context;
 
-        public async Task<Garage?> GetById(int id)
+        public async Task<Garage> GetById(int id)
         {
             var garage = await _context.Garages.FirstOrDefaultAsync(g => g.ID == id);
+
+            if (garage is null)
+            {
+                throw new ArgumentNullException(nameof(garage));
+            }
 
             return garage;
         }
@@ -31,7 +36,7 @@ namespace garage_2._0.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Garage?>> All()
+        public async Task<IEnumerable<Garage>> All()
         {
             var garages = await _context.Garages.ToListAsync();
 
@@ -43,5 +48,9 @@ namespace garage_2._0.Repositories
             return _context.Garages.Any(g => g.ID == id);
         }
 
+        public Task Create(Garage entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

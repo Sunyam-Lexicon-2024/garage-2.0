@@ -1,4 +1,4 @@
-﻿using garage_2._0.Enums;
+﻿using garage_2._0.Models.Enums;
 
 namespace garage_2._0.Models
 {
