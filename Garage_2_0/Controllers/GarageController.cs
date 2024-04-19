@@ -1,5 +1,6 @@
 ﻿using Garage_2_0.Models;
 using Garage_2_0.Repositories;
+using Garage_2_0.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,14 +26,21 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.Find(g => g.ID == id);
+            var garage = (await _repository.Find(g => g.ID == id)).Single();
 
             if (garage == null)
             {
                 return NotFound();
             }
 
-            return View(garage);
+            GarageViewModel garageViewModel = new()
+            {
+                Id = garage.ID,
+                Name = garage.Name,
+                MaxCapacity = garage.MaxCapacity
+            };
+
+            return View(garageViewModel);
         }
 
 
