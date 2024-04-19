@@ -12,7 +12,7 @@ using garage_2._0.Models;
 namespace garage_2._0.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    [Migration("20240418161252_SeedData")]
+    [Migration("20240419092236_SeedData")]
     partial class SeedData
     {
         /// <inheritdoc />
@@ -42,7 +42,7 @@ namespace garage_2._0.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Garages");
+                    b.ToTable("Garage", (string)null);
 
                     b.HasData(
                         new
@@ -92,7 +92,7 @@ namespace garage_2._0.Migrations
 
                     b.HasIndex("GarageId");
 
-                    b.ToTable("ParkedVehicles");
+                    b.ToTable("ParkedVehicle", (string)null);
 
                     b.HasData(
                         new
@@ -102,7 +102,7 @@ namespace garage_2._0.Migrations
                             Color = 4,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7634),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(2992),
                             RegistrationNumber = "FPD941",
                             Type = 0,
                             Wheels = 4
@@ -114,7 +114,7 @@ namespace garage_2._0.Migrations
                             Color = 1,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7696),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3048),
                             RegistrationNumber = "CLQ415",
                             Type = 0,
                             Wheels = 4
@@ -126,7 +126,7 @@ namespace garage_2._0.Migrations
                             Color = 2,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7699),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3051),
                             RegistrationNumber = "YHV901",
                             Type = 0,
                             Wheels = 4
@@ -138,7 +138,7 @@ namespace garage_2._0.Migrations
                             Color = 7,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7701),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3054),
                             RegistrationNumber = "GBO781",
                             Type = 0,
                             Wheels = 4
@@ -150,7 +150,7 @@ namespace garage_2._0.Migrations
                             Color = 0,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7704),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3056),
                             RegistrationNumber = "JRC132",
                             Type = 0,
                             Wheels = 4

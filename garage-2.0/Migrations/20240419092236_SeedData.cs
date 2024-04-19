@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace garage_2._0.Migrations
 {
     /// <inheritdoc />
-    public partial class Tables : Migration
+    public partial class SeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,40 +48,22 @@ namespace garage_2._0.Migrations
                 table: "Garage",
                 column: "ID");
 
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicle",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3096));
+            migrationBuilder.InsertData(
+                table: "Garage",
+                columns: new[] { "ID", "MaxCapacity", "Name" },
+                values: new object[] { 1, 50, "Default Garage One" });
 
-            migrationBuilder.UpdateData(
+            migrationBuilder.InsertData(
                 table: "ParkedVehicle",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3159));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicle",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3162));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicle",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3165));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicle",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3167));
+                columns: new[] { "Id", "Brand", "Color", "GarageId", "Model", "RegisteredAt", "RegistrationNumber", "Type", "Wheels" },
+                values: new object[,]
+                {
+                    { 1, "Volkswagen", 4, 1, "Unknown", new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(2992), "FPD941", 0, 4 },
+                    { 2, "Saab", 1, 1, "Unknown", new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3048), "CLQ415", 0, 4 },
+                    { 3, "Volvo", 2, 1, "Unknown", new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3051), "YHV901", 0, 4 },
+                    { 4, "Audi", 7, 1, "Unknown", new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3054), "GBO781", 0, 4 },
+                    { 5, "Toyota", 0, 1, "Unknown", new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3056), "JRC132", 0, 4 }
+                });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ParkedVehicle_Garage_GarageId",
@@ -105,6 +89,36 @@ namespace garage_2._0.Migrations
                 name: "PK_Garage",
                 table: "Garage");
 
+            migrationBuilder.DeleteData(
+                table: "ParkedVehicle",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "ParkedVehicle",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "ParkedVehicle",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "ParkedVehicle",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "ParkedVehicle",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "Garage",
+                keyColumn: "ID",
+                keyValue: 1);
+
             migrationBuilder.RenameTable(
                 name: "ParkedVehicle",
                 newName: "ParkedVehicles");
@@ -127,41 +141,6 @@ namespace garage_2._0.Migrations
                 name: "PK_Garages",
                 table: "Garages",
                 column: "ID");
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicles",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7634));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicles",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7696));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicles",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7699));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicles",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7701));
-
-            migrationBuilder.UpdateData(
-                table: "ParkedVehicles",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "RegisteredAt",
-                value: new DateTime(2024, 4, 18, 18, 12, 51, 530, DateTimeKind.Local).AddTicks(7704));
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ParkedVehicles_Garages_GarageId",

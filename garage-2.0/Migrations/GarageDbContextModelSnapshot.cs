@@ -99,7 +99,7 @@ namespace garage_2._0.Migrations
                             Color = 4,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3096),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(2992),
                             RegistrationNumber = "FPD941",
                             Type = 0,
                             Wheels = 4
@@ -111,7 +111,7 @@ namespace garage_2._0.Migrations
                             Color = 1,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3159),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3048),
                             RegistrationNumber = "CLQ415",
                             Type = 0,
                             Wheels = 4
@@ -123,7 +123,7 @@ namespace garage_2._0.Migrations
                             Color = 2,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3162),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3051),
                             RegistrationNumber = "YHV901",
                             Type = 0,
                             Wheels = 4
@@ -135,7 +135,7 @@ namespace garage_2._0.Migrations
                             Color = 7,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3165),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3054),
                             RegistrationNumber = "GBO781",
                             Type = 0,
                             Wheels = 4
@@ -147,7 +147,7 @@ namespace garage_2._0.Migrations
                             Color = 0,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 18, 18, 25, 27, 433, DateTimeKind.Local).AddTicks(3167),
+                            RegisteredAt = new DateTime(2024, 4, 19, 11, 22, 35, 539, DateTimeKind.Local).AddTicks(3056),
                             RegistrationNumber = "JRC132",
                             Type = 0,
                             Wheels = 4
