@@ -8,7 +8,7 @@ namespace Garage_2_0.Controllers
 {
     public class VehicleController(IRepository<ParkedVehicle> repository) : Controller
     {
-        private IRepository<ParkedVehicle> _repository = repository;
+        private readonly IRepository<ParkedVehicle> _repository = repository;
 
         public async Task<IActionResult> Index()
         {

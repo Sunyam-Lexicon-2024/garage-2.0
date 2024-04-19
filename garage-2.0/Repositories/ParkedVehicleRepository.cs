@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2_0.Repositories
 {
-    public class ParkedVehicleRepository(GarageDbContext context)
+    public class ParkedVehicleRepository(GarageDbContext context) : IRepository<ParkedVehicle>
     {
         private readonly GarageDbContext _context = context;
 
