@@ -24,22 +24,17 @@ namespace garage_2._0.Repositories
         public async Task Delete(int id)
         {
             var vehicle = await _context.ParkedVehicles.FirstOrDefaultAsync(x => x.Id == id);
-            if (vehicle is null)
-            {
-                throw new ArgumentNullException(nameof(vehicle));
-            }
 
-            _context.Remove(vehicle);
-            await _context.SaveChangesAsync();
+            if (vehicle != null)
+            {
+                _context.Remove(vehicle);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<ParkedVehicle> GetById(int id)
+        public async Task<ParkedVehicle?> GetById(int id)
         {
             var vehicle = await _context.ParkedVehicles.FirstOrDefaultAsync(x => x.Id == id);
-            if (vehicle is null)
-            {
-                throw new ArgumentNullException(nameof(vehicle));
-            }
 
             return vehicle;
         }
