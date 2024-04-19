@@ -9,7 +9,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
 
     private GarageDbContext _context = context;
 
-    public async Task<IEnumerable<Garage?>> All()
+    public async Task<IEnumerable<Garage>> All()
     {
         var garages = await _context.Garages.ToListAsync();
         return garages;
@@ -21,7 +21,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return any;
     }
 
-    public async Task<IEnumerable<Garage?>> Find(Func<Garage, bool> predicate)
+    public async Task<IEnumerable<Garage>> Find(Func<Garage, bool> predicate)
     {
         var garages = await Task.Run(() =>
         {

@@ -1,11 +1,10 @@
 ﻿using garage_2._0.Models;
-using garage_2._0.Repositories;
+using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace garage_2._0.Controllers
 {
-
 
     public class GarageController(GarageDbContext context) : Controller
     {
@@ -26,7 +25,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.GetById((int)id);
+            var garage = await _repository.Find(g => g.ID == id);
 
             if (garage == null)
             {
@@ -50,7 +49,7 @@ namespace garage_2._0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.GetById((int)id);
+            var garage = await _repository.Find(g => g.ID == id);
 
             if (garage == null)
             {
@@ -78,7 +77,7 @@ namespace garage_2._0.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GarageExists(garage.ID))
+                    if (!(await GarageExists(garage.ID)))
                     {
                         return NotFound();
                     }
@@ -107,9 +106,9 @@ namespace garage_2._0.Controllers
 
             return View(garages);
         }
-        private bool GarageExists(int id)
+        private async Task<bool> GarageExists(int id)
         {
-            return _repository.Any(id);
+            return await _repository.Any(g => g.ID == id);
         }
     }
 }
