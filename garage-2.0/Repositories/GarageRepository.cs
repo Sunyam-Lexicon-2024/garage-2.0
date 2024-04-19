@@ -21,7 +21,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return any;
     }
 
-    public async Task<IEnumerable<Garage?>> FindMany(Func<Garage, bool> predicate)
+    public async Task<IEnumerable<Garage?>> Find(Func<Garage, bool> predicate)
     {
         var garages = await Task.Run(() =>
         {
@@ -47,12 +47,6 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
             return deletedGarage;
         }
         return null;
-    }
-
-    public async Task<Garage?> Find(Func<Garage, bool> predicate)
-    {
-        var garage = await _context.Garages.FindAsync(predicate);
-        return garage;
     }
 
     public async Task<Garage> Update(Garage entity)
