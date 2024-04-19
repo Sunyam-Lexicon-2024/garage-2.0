@@ -1,4 +1,5 @@
-﻿@model ParkedVehicle
+﻿@model ParkedVehicle;
+@using garage_2._0.Enums;
 
 @{
     ViewData["Title"] = "Create Vehicle";
@@ -15,7 +16,12 @@
             </div>
             <div class="mb-3">
                 <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
+                <select asp-for="Type" class="form-control">
+                    @foreach (var type in Enum.GetValues(typeof(VehicleType)))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -40,7 +46,12 @@
             </div>
             <div class="mb-3">
                 <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
+                <select asp-for="Color" class="form-control">
+                    @foreach (var color in Enum.GetValues(typeof(Color)))
+                    {
+                        <option value="@color">@color</option>
+                    }
+                </select>
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="mb-3">
