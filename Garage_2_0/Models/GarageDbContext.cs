@@ -17,6 +17,5 @@ namespace Garage_2_0.Models
             modelBuilder.ApplyConfiguration(new GarageConfiguration());
             modelBuilder.ApplyConfiguration(new ParkedVehicleConfiguration());
         }
-        public DbSet<Garage_2_0.ViewModels.GarageViewModel> GarageViewModel { get; set; } = default!;
     }
 }
