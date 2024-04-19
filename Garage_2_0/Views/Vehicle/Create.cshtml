@@ -6,10 +6,11 @@
 
 <div class="row">
     <div class="col-sm-8 col-xl-3">
-        <div class="card mb-2 p-2 bg-light">
+        <div class="card p-2 bg-light">
             <div class="card-body">
                 <h3 class="mb-3">Park your vehicle</h3>
                 <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mb-3">
                         <label asp-for="RegistrationNumber" class="control-label"></label>
                         <input asp-for="RegistrationNumber" class="form-control" />
