@@ -6,14 +6,14 @@ namespace Garage_2_0.Repositories;
 public class GarageRepository(GarageDbContext context) : IRepository<Garage>
 {
 
-    private GarageDbContext _context = context;
+    private readonly GarageDbContext _context = context;
 
     public async Task<IEnumerable<Garage>> All()
     {
         var garages = await _context.Garages.ToListAsync();
         return garages;
     }
-    
+
     public async Task<bool> Any(Func<Garage, bool> predicate)
     {
         bool any = await Task.Run(() => { return _context.Garages.Any(predicate); });
