@@ -51,5 +51,10 @@ namespace garage_2._0.Controllers
             var vehicles = _context.ParkedVehicles.ToList();
             return View(vehicles);
         }
+        // GET: Vehicle/Details
+        public IActionResult Details()
+        {
+            return View();
+        }
     }
 }
