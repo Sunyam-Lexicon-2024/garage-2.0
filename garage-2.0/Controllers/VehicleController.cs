@@ -1,5 +1,6 @@
 ﻿using garage_2._0.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -51,10 +52,31 @@ namespace garage_2._0.Controllers
             var vehicles = _context.ParkedVehicles.ToList();
             return View(vehicles);
         }
+
+        // GET: Vehicle/Details/
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicles = await _context.ParkedVehicles
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (vehicles == null)
+            {
+                return NotFound();
+            }
+
+            return View(vehicles);
+        }
+
+
         // GET: Vehicle/Details
         public IActionResult Details()
         {
             return View();
         }
+
     }
 }
