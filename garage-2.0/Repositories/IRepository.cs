@@ -1,4 +1,4 @@
-namespace Garage_2._0.Repositories;
+namespace Garage_2_0.Repositories;
 
 public interface IRepository<T> where T : class
 {

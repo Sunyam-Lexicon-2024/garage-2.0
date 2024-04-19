@@ -1,9 +1,9 @@
-﻿using garage_2._0.Models;
-using garage_2._0.Models.Enums;
+﻿using Garage_2_0.Models;
+using Garage_2_0.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace garage_2._0.Data.EntityConfigurations
+namespace Garage_2_0.Data.EntityConfigurations
 {
     public class ParkedVehicleConfiguration : IEntityTypeConfiguration<ParkedVehicle>
     {

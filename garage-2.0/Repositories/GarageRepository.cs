@@ -1,5 +1,4 @@
-using garage_2._0.Models;
-using Garage_2._0.Repositories;
+using Garage_2_0.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2_0.Repositories;

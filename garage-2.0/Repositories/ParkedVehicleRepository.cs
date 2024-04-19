@@ -1,10 +1,9 @@
-﻿using garage_2._0.Models;
-using Garage_2._0.Repositories;
+using Garage_2_0.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace garage_2._0.Repositories
+namespace Garage_2_0.Repositories
 {
-    public class ParkedVehicleRepository(GarageDbContext context) : IRepository<ParkedVehicle>
+    public class ParkedVehicleRepository(GarageDbContext context)
     {
         private readonly GarageDbContext _context = context;
 

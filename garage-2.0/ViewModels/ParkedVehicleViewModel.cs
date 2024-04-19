@@ -1,6 +1,6 @@
-﻿using garage_2._0.Models.Enums;
+﻿using Garage_2_0.Models.Enums;
 
-namespace garage_2._0.ViewModels
+namespace Garage_2_0.ViewModels
 {
     public class ParkedVehicleViewModel
     {

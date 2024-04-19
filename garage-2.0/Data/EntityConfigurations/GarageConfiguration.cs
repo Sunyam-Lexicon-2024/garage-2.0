@@ -1,9 +1,9 @@
-﻿using garage_2._0.Models;
+﻿using Garage_2_0.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
 
-namespace garage_2._0.Data.EntityConfigurations
+namespace Garage_2_0.Data.EntityConfigurations
 {
     public class GarageConfiguration : IEntityTypeConfiguration<Garage>
     {

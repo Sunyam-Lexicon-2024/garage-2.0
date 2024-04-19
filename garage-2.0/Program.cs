@@ -1,6 +1,5 @@
-using garage_2._0.Models;
-using garage_2._0.Repositories;
-using Garage_2._0.Repositories;
+using Garage_2_0.Models;
+using Garage_2_0.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
