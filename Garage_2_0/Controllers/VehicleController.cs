@@ -13,14 +13,12 @@ namespace Garage_2_0.Controllers
         {
             var vehicles = await _repository.All();
 
-            var model = vehicles.Select(x => new ParkedVehicleViewModel
+            var model = vehicles.Select(x => new ParkedVehicleSlimViewModel
             {
                 Id = x.Id,
                 RegistrationNumber = x.RegistrationNumber,
                 Type = x.Type,
                 Brand = x.Brand,
-                Model = x.Model,
-                Wheels = x.Wheels,
                 RegisteredAt = x.RegisteredAt,
                 Color = x.Color,
             }).ToList();
