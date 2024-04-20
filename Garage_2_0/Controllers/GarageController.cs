@@ -100,7 +100,7 @@ namespace Garage_2_0.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _repository.Any(g => g.ID == id))
+                    if (!await GarageExists(id))
                     {
                         return NotFound();
                     }
@@ -120,6 +120,11 @@ namespace Garage_2_0.Controllers
         {
             await _repository.Delete(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> GarageExists(int id)
+        {
+            return await _repository.Any(g => g.ID == id);
         }
     }
 }
