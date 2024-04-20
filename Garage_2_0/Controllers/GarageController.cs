@@ -25,7 +25,6 @@ namespace Garage_2_0.Controllers
             return View(model);
         }
 
-        // use GarageDetailedViewModel
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

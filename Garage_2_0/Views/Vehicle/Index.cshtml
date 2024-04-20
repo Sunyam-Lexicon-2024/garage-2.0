@@ -17,6 +17,7 @@
                 <th>@Html.DisplayNameFor(x => x.Wheels)</th>
                 <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
                 <th>@Html.DisplayNameFor(x => x.Color)</th>
+                <th>Details</th>
             </thead>
             <tbody>
                 @foreach (var vehicle in Model)
@@ -30,6 +31,9 @@
                         <td>@vehicle.Wheels</td>
                         <td>@vehicle.RegisteredAt.ToShortDateString()</td>
                         <td>@vehicle.Color</td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                        </td>
                     </tr>
                 }
             </tbody>

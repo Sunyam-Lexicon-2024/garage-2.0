@@ -12,6 +12,7 @@
             <th>@Html.DisplayNameFor(g => g.Id)</th>
             <th>@Html.DisplayNameFor(g => g.Name)</th>
             <th>@Html.DisplayNameFor(g => g.MaxCapacity)</th>
+            <th>Details</th>
             </thead>
             <tbody>
                 @foreach (var garage in Model)
@@ -20,6 +21,9 @@
                         <th scope="row">@garage.Id</th>
                         <td>@garage.Name</td>
                         <td>@garage.MaxCapacity</td>
+                        <td>
+                            <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
+                        </td>
                     </tr>
                 }
             </tbody>
