@@ -1,7 +1,6 @@
 using Garage_2_0.Models;
 using Garage_2_0.Repositories;
 using Garage_2_0.ViewModels;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace Garage_2_0.Controllers
@@ -14,17 +13,33 @@ namespace Garage_2_0.Controllers
         {
             var vehicles = await _repository.All();
 
-            var model = vehicles.Select(x => new ParkedVehicleViewModel
+            var model = vehicles.Select(x => new ParkedVehicleSlimViewModel
             {
                 Id = x.Id,
                 RegistrationNumber = x.RegistrationNumber,
                 Type = x.Type,
                 Brand = x.Brand,
-                Model = x.Model,
-                Wheels = x.Wheels,
                 RegisteredAt = x.RegisteredAt,
                 Color = x.Color,
             }).ToList();
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _repository.Find(v => v.Id == id);
+            var model = result.Select(x => new ParkedVehicleViewModel
+            {
+                Id = x.Id,
+                Brand = x.Brand,
+                Color = x.Color,
+                Model = x.Model,
+                RegisteredAt = x.RegisteredAt,
+                RegistrationNumber = x.RegistrationNumber,
+                Type = x.Type,
+                Wheels = x.Wheels
+            }).First();
 
             return View(model);
         }

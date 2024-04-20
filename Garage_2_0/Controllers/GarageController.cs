@@ -9,16 +9,22 @@ namespace Garage_2_0.Controllers
 
     public class GarageController(IRepository<Garage> repository) : Controller
     {
-
         private readonly IRepository<Garage> _repository = repository;
 
-        // use GarageViewModel?
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var garages = await _repository.All();
+
+            var model = garages.Select(g => new GarageViewModel
+            {
+                Id = g.ID,
+                Name = g.Name,
+                MaxCapacity = g.MaxCapacity
+            });
+
+            return View(model);
         }
 
-        // use GarageDetailedViewModel
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -93,7 +99,7 @@ namespace Garage_2_0.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await GarageExists(garage.ID))
+                    if (!await GarageExists(id))
                     {
                         return NotFound();
                     }
@@ -115,13 +121,6 @@ namespace Garage_2_0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> List()
-        {
-            // use GarageViewModel
-            var garages = await _repository.All();
-
-            return View(garages);
-        }
         private async Task<bool> GarageExists(int id)
         {
             return await _repository.Any(g => g.ID == id);

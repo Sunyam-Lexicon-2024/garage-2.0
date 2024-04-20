@@ -1,14 +1,10 @@
-﻿@model ParkedVehicle
+﻿@model ParkedVehicleViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewBag.Title = $"{Model.RegistrationNumber}";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Vehicle</h4>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RegistrationNumber)

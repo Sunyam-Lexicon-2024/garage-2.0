@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ParkedVehicleViewModel>
+﻿@model IEnumerable<ParkedVehicleSlimViewModel>
 
 @{
     ViewBag.Title = "Vehicles";
@@ -6,30 +6,28 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <h3>Vehicles</h3>
+        <h3 class="mb-3">Vehicles</h3>
         <table class="table table-bordered">
             <thead class="table-light">
-                <th>@Html.DisplayNameFor(x => x.Id)</th>
                 <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
                 <th>@Html.DisplayNameFor(x => x.Type)</th>
                 <th>@Html.DisplayNameFor(x => x.Brand)</th>
-                <th>@Html.DisplayNameFor(x => x.Model)</th>
-                <th>@Html.DisplayNameFor(x => x.Wheels)</th>
                 <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
                 <th>@Html.DisplayNameFor(x => x.Color)</th>
+                <th>Details</th>
             </thead>
             <tbody>
                 @foreach (var vehicle in Model)
                 {
                     <tr>
-                        <th scope="row">@vehicle.Id</th>
                         <td>@vehicle.RegistrationNumber</td>
                         <td>@vehicle.Type</td>
                         <td>@vehicle.Brand</td>
-                        <td>@vehicle.Model</td>
-                        <td>@vehicle.Wheels</td>
-                        <td>@vehicle.RegisteredAt.ToShortDateString()</td>
+                        <td>@vehicle.RegisteredAt</td>
                         <td>@vehicle.Color</td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                        </td>
                     </tr>
                 }
             </tbody>
