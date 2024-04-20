@@ -28,6 +28,24 @@ namespace Garage_2_0.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _repository.Find(v => v.Id == id);
+            var model = result.Select(x => new ParkedVehicleViewModel
+            {
+                Id = x.Id,
+                Brand = x.Brand,
+                Color = x.Color,
+                Model = x.Model,
+                RegisteredAt = x.RegisteredAt,
+                RegistrationNumber = x.RegistrationNumber,
+                Type = x.Type,
+                Wheels = x.Wheels
+            }).First();
+
+            return View(model);
+        }
+
         public IActionResult Create()
         {
             return View();
