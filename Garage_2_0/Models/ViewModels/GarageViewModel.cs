@@ -1,4 +1,4 @@
-﻿namespace Garage_2_0.ViewModels
+﻿namespace Garage_2_0.Models.ViewModels
 {
     public class GarageViewModel
     {
