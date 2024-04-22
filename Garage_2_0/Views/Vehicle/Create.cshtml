@@ -4,6 +4,10 @@
     ViewData["Title"] = "Park vehicle";
 }
 
+@if (ViewBag.EnableAlert is true)
+{
+    <div class="alert alert-success">Successfully parked new vehicle</div>
+} 
 <div class="row">
     <div class="col-sm-8 col-xl-3">
         <div class="card p-2 bg-light">

@@ -17,7 +17,9 @@ namespace Garage_2_0.Controllers
         {
             var vehicles = await _vehicleRepository.All();
 
-            var model = vehicles.Select(x => new ParkedVehicleSlimViewModel
+            var model = vehicles
+                .OrderByDescending(x => x.RegisteredAt)
+                .Select(x => new ParkedVehicleSlimViewModel
             {
                 Id = x.Id,
                 RegistrationNumber = x.RegistrationNumber,
@@ -91,9 +93,14 @@ namespace Garage_2_0.Controllers
                     vehicle.GarageId = garage.ID;
                 }
 
-                await _vehicleRepository.Create(vehicle);
+                var parkedVehicle = await _vehicleRepository.Create(vehicle);
 
-                return RedirectToAction(nameof(Index));
+                if (parkedVehicle is not null)
+                {
+                    ViewBag.EnableAlert = true;
+                }
+
+                return View(viewModel);
             }
             return View(viewModel);
         }
