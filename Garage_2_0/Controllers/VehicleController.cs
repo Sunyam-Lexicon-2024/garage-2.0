@@ -26,13 +26,15 @@ namespace Garage_2_0.Controllers
 
             if (selectedVehicleType is not null)
             {
-                model = model.Where(m => m.Type == selectedVehicleType).ToList();
+                viewModel = viewModel.Where(m => m.Type == selectedVehicleType).ToList();
             }
-            else if (!string.IsNullOrEmpty(regNumber))
+
+            if (!string.IsNullOrEmpty(regNumber))
             {
                 viewModel = [viewModel.FirstOrDefault(v => v.RegistrationNumber == regNumber)];
             }
-            return View(model);
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Details(int id)
