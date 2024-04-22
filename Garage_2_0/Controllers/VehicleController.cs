@@ -1,6 +1,7 @@
 using Garage_2_0.Models;
 using Garage_2_0.Models.Enums;
-using Garage_2_0.Models.ViewModels;
+using Garage_2_0.Models.ViewModels.Common;
+using Garage_2_0.Models.ViewModels.Vehicle;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

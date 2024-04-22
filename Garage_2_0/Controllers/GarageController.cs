@@ -1,5 +1,5 @@
 ﻿using Garage_2_0.Models;
-using Garage_2_0.Models.ViewModels;
+using Garage_2_0.Models.ViewModels.Garage;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

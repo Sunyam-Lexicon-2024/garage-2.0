@@ -1,7 +1,7 @@
 ﻿using Garage_2_0.Models.Enums;
 using System.ComponentModel;
 
-namespace Garage_2_0.Models.ViewModels;
+namespace Garage_2_0.Models.ViewModels.Common;
 
 public class StatsViewModel
 {
