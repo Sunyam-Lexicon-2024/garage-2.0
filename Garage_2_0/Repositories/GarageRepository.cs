@@ -55,8 +55,5 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return updatedGarage;
     }
 
-    public Task<string?> GetById(int id)
-    {
-        throw new NotImplementedException();
-    }
+ 
 }

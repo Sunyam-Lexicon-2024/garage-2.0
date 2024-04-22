@@ -3,6 +3,7 @@ using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Garage_2_0.Controllers
 {
@@ -81,7 +82,8 @@ namespace Garage_2_0.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vehicle = await _repository.GetById(id);
+
+            var vehicle = (await _repository.Find(v => v.Id == id)).Single();
             if (vehicle == null)
             {
                 return NotFound();
