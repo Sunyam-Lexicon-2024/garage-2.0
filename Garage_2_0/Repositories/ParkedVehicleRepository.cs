@@ -53,5 +53,10 @@ namespace Garage_2_0.Repositories
             await _context.SaveChangesAsync();
             return updatedVehicle;
         }
+
+        public Task<string?> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
