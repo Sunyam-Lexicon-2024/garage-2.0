@@ -8,10 +8,10 @@ using System.Diagnostics;
 namespace Garage_2._0.Web.Controllers;
 
 public class StatsController(ILogger<StatsController> logger,
-                            IRepository<ParkedVehicle> vehicles
+                            IRepository<ParkedVehicle> vehicleRepository
                             ) : Controller
 {
-    private readonly IRepository<ParkedVehicle> _vehicles = vehicles;
+    private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
     private readonly ILogger<StatsController> _logger = logger;
 
@@ -19,7 +19,7 @@ public class StatsController(ILogger<StatsController> logger,
     {
         var viewModel = new StatsViewModel();
 
-        var vehicles = await _vehicles.All();
+        var vehicles = await _vehicleRepository.All();
 
         viewModel.TotalWheelCount = vehicles.Select(x => x.Wheels).Sum();
         viewModel.AccumulatedRevenue = CalculateTotalRevenue(vehicles);
