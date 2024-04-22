@@ -14,6 +14,7 @@ namespace Garage_2_0.Models.ViewModels
         public int Wheels { get; set; }
         public DateTime RegisteredAt { get; set; }
         public Color Color { get; set; }
+        public int GarageId { get; set; }
         public IEnumerable<SelectListItem> Garages { get; set; } = new List<SelectListItem>();
     }
 }
