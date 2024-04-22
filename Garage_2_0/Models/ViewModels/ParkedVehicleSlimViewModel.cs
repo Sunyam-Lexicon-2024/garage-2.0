@@ -14,8 +14,5 @@ namespace Garage_2_0.Models.ViewModels
         [DisplayName("Parked At")]
         public DateTime RegisteredAt { get; set; }
         public Color Color { get; set; }
-
-        public readonly static SelectList VehicleTypes = new(Enum.GetValues(typeof(VehicleType)));
-        public static VehicleType? SelectedVehicleType { get; set; }
     }
 }
