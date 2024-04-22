@@ -57,10 +57,28 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Garage garage)
+        public async Task<IActionResult> Create(GarageViewModel viewModel)
         {
-            var createdGarage = await _repository.Create(garage);
-            return View(createdGarage);
+            var garageToCreate = new Garage()
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                ParkingSpotCount = viewModel.ParkingSpotCount
+            };
+
+            for (int i = 0; i < garageToCreate.ParkingSpotCount; i++)
+            {
+                garageToCreate.ParkingSpots.Add(new ParkingSpot());
+            };
+
+            var createdGarage = await _repository.Create(garageToCreate);
+
+            if (createdGarage is null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // use GarageDetailedViewModel

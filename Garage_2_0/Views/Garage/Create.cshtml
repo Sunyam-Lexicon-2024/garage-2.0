@@ -1,4 +1,4 @@
-﻿@model Garage
+﻿@model GarageViewModel
 
 @{
     ViewBag.Title = "New Garage";
@@ -9,7 +9,7 @@
         <div class="card p-2 bg-light">
             <div class="card-body">
                 <h3 class="mb-3">Create a new garage</h3>
-                <form asp-action="Create">
+                <form asp-controller="Garage" asp-action="Create" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="mb-3">
                         <label asp-for="Name" class="control-label"></label>
