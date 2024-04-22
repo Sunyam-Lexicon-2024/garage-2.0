@@ -158,6 +158,17 @@ namespace Garage_2_0.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> Checkout(int id)
+        {
+            var vehicle = (await _vehicleRepository.Find(x => x.Id == id)).Single();
+            if (vehicle is not null)
+            {
+                return View(vehicle);
+            }
+
+            return View();
+        }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
