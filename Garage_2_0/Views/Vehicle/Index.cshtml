@@ -1,23 +1,35 @@
-﻿@model IEnumerable<ParkedVehicleSlimViewModel>
+﻿@model IndexParkedVehicleViewModel
 
 @{
     ViewBag.Title = "Vehicles";
 }
 
+@if (Model.Alert is not null && Model.Alert.IsActive)
+{
+    switch (Model.Alert.Type)
+    {
+        case AlertType.Success:
+            <div class="alert alert-success">@Model.Alert.Message</div>
+            break;
+        case AlertType.Danger:
+            <div class="alert alert-danger">@Model.Alert.Message</div>
+            break;
+    }
+}
 <div class="row">
     <div class="col-sm-6">
         <h3 class="mb-3">Vehicles</h3>
         <table class="table table-bordered">
             <thead class="table-light">
-                <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
-                <th>@Html.DisplayNameFor(x => x.Type)</th>
-                <th>@Html.DisplayNameFor(x => x.Brand)</th>
-                <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
-                <th>@Html.DisplayNameFor(x => x.Color)</th>
+                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
+                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
+                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
+                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
+                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
                 <th>Details</th>
             </thead>
             <tbody>
-                @foreach (var vehicle in Model)
+                @foreach (var vehicle in Model.ParkedVehicles)
                 {
                     <tr>
                         <td>@vehicle.RegistrationNumber</td>

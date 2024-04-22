@@ -1,4 +1,5 @@
 using Garage_2_0.Models;
+using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,21 +14,27 @@ namespace Garage_2_0.Controllers
         private readonly IRepository<Garage> _garageRepository = garageRepository;
         private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(AlertViewModel? alert)
         {
-            var vehicles = await _vehicleRepository.All();
+            var model = new IndexParkedVehicleViewModel();
 
-            var model = vehicles
+            var vehicles = await _vehicleRepository.All();
+            model.ParkedVehicles = vehicles
                 .OrderByDescending(x => x.RegisteredAt)
                 .Select(x => new ParkedVehicleSlimViewModel
+                {
+                    Id = x.Id,
+                    RegistrationNumber = x.RegistrationNumber,
+                    Type = x.Type,
+                    Brand = x.Brand,
+                    RegisteredAt = x.RegisteredAt,
+                    Color = x.Color,
+                }).ToList();
+
+            if (alert is not null)
             {
-                Id = x.Id,
-                RegistrationNumber = x.RegistrationNumber,
-                Type = x.Type,
-                Brand = x.Brand,
-                RegisteredAt = x.RegisteredAt,
-                Color = x.Color,
-            }).ToList();
+                model.Alert = alert;
+            }
 
             return View(model);
         }
@@ -95,12 +102,12 @@ namespace Garage_2_0.Controllers
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
 
-                if (parkedVehicle is not null)
+                return RedirectToAction(nameof(Index), new
                 {
-                    ViewBag.EnableAlert = true;
-                }
-
-                return View(viewModel);
+                    IsActive = true,
+                    Message = $"Successfully parked {parkedVehicle.Type} at {parkedVehicle.RegisteredAt} with registration number: {parkedVehicle.RegistrationNumber}",
+                    Type = AlertType.Success
+                });
             }
             return View(viewModel);
         }
