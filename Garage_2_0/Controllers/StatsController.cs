@@ -7,12 +7,13 @@ using System.Diagnostics;
 
 namespace Garage_2._0.Web.Controllers;
 
-public class StatsController(ILogger<StatsController> logger,
+public class StatsController(IConfiguration configuration,
+                            ILogger<StatsController> logger,
                             IRepository<ParkedVehicle> vehicleRepository
                             ) : Controller
 {
     private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
-
+    private readonly int _hourlyRate = configuration.GetValue<int>("GarageSettings:HourlyRate");
     private readonly ILogger<StatsController> _logger = logger;
 
     public async Task<IActionResult> Index()
@@ -31,24 +32,23 @@ public class StatsController(ILogger<StatsController> logger,
     private static Dictionary<VehicleType, int> CalculateVehiclesRegistered(IEnumerable<ParkedVehicle> vehicles)
     {
         Dictionary<VehicleType, int> vehicleCountList = new() {
-            {VehicleType.Car, vehicles.Where(v => v.Type == VehicleType.Car).ToList().Count},
-            {VehicleType.Motorcycle,  vehicles.Where(v => v.Type == VehicleType.Motorcycle).ToList().Count},
-            {VehicleType.Bus,  vehicles.Where(v => v.Type == VehicleType.Bus).ToList().Count},
-            {VehicleType.Boat,  vehicles.Where(v => v.Type == VehicleType.Boat).ToList().Count},
-            {VehicleType.Airplane,  vehicles.Where(v => v.Type == VehicleType.Airplane).ToList().Count},
+            {VehicleType.Car, vehicles.Where(v => v.Type == VehicleType.Car).Count()},
+            {VehicleType.Motorcycle,  vehicles.Where(v => v.Type == VehicleType.Motorcycle).Count()},
+            {VehicleType.Bus,  vehicles.Where(v => v.Type == VehicleType.Bus).Count()},
+            {VehicleType.Boat,  vehicles.Where(v => v.Type == VehicleType.Boat).Count()},
+            {VehicleType.Airplane,  vehicles.Where(v => v.Type == VehicleType.Airplane).Count()},
         };
 
         return vehicleCountList;
     }
 
-    private static int CalculateTotalRevenue(IEnumerable<ParkedVehicle> vehicles)
+    private int CalculateTotalRevenue(IEnumerable<ParkedVehicle> vehicles)
     {
         int total = 0;
-        int rate = 5; // where to place?
         foreach (var v in vehicles)
         {
             var hours = (DateTime.Now - v.RegisteredAt).Hours;
-            total += hours * rate;
+            total += hours * _hourlyRate;
         }
         return total;
     }

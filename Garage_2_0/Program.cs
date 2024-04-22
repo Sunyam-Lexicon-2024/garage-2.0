@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;
 
+services.AddSingleton(configuration);
+
 services.AddControllersWithViews(options => options.EnableEndpointRouting = false);
 services.AddDbContext<GarageDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Default")));
 
