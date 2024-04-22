@@ -6,6 +6,7 @@ namespace Garage_2_0.Models.ViewModels
     public class ParkedVehicleViewModel
     {
         public int Id { get; set; }
+        [DisplayName("Registration Number")]
         public string? RegistrationNumber { get; set; }
         public VehicleType Type { get; set; }
         public string? Brand { get; set; }
