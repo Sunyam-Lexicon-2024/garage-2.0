@@ -2,7 +2,7 @@
 
 namespace Garage_2_0.Models
 {
-    public class ParkedVehicle
+    public class Vehicle
     {
         public int Id { get; set; }
         public int GarageId { get; set; }

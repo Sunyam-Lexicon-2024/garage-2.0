@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Garage_2_0.Data.EntityConfigurations
 {
-    public class ParkedVehicleConfiguration : IEntityTypeConfiguration<ParkedVehicle>
+    public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
     {
-        public void Configure(EntityTypeBuilder<ParkedVehicle> builder)
+        public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.ToTable("ParkedVehicle");
+            builder.ToTable("Vehicle");
 
-            var vehicles = new List<ParkedVehicle>
+            var vehicles = new List<Vehicle>
             {
-                new ParkedVehicle
+                new ()
                 {
                     Id = 1,
                     GarageId = 1,
@@ -25,7 +25,7 @@ namespace Garage_2_0.Data.EntityConfigurations
                     RegisteredAt = DateTime.Now,
                     Color = Color.Purple
                 },
-                new ParkedVehicle
+                new ()
                 {
                     Id = 2,
                     GarageId = 1,
@@ -37,7 +37,7 @@ namespace Garage_2_0.Data.EntityConfigurations
                     RegisteredAt = DateTime.Now,
                     Color = Color.Yellow
                 },
-                new ParkedVehicle
+                new ()
                 {
                     Id = 3,
                     GarageId = 1,
@@ -49,7 +49,7 @@ namespace Garage_2_0.Data.EntityConfigurations
                     RegisteredAt = DateTime.Now,
                     Color = Color.Blue
                 },
-                new ParkedVehicle
+                new ()
                 {
                     Id = 4,
                     GarageId = 1,
@@ -61,7 +61,7 @@ namespace Garage_2_0.Data.EntityConfigurations
                     RegisteredAt = DateTime.Now,
                     Color = Color.Black
                 },
-                new ParkedVehicle
+                new ()
                 {
                     Id = 5,
                     GarageId = 1,

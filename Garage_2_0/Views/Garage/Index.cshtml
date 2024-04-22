@@ -4,30 +4,27 @@
     ViewBag.Title = "Garages";
 }
 
-<div class="row">
-    <div class="col-sm-6">
-        <h3 class="mb-3">Garages</h3>
-        <a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
-        <table class="table table-bordered">
-            <thead class="table-light">
-            <th>@Html.DisplayNameFor(g => g.Id)</th>
-            <th>@Html.DisplayNameFor(g => g.Name)</th>
-            <th>@Html.DisplayNameFor(g => g.MaxCapacity)</th>
-            <th>Details</th>
-            </thead>
-            <tbody>
-                @foreach (var garage in Model)
-                {
-                    <tr>
-                        <th scope="row">@garage.Id</th>
-                        <td>@garage.Name</td>
-                        <td>@garage.MaxCapacity</td>
-                        <td>
-                            <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+
+<h3 class="mb-3">@ViewBag.Title</h3>
+<a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
+<table class="table table-bordered">
+    <thead class="table-light">
+    <th>@Html.DisplayNameFor(g => g.Id)</th>
+    <th>@Html.DisplayNameFor(g => g.Name)</th>
+    <th>@Html.DisplayNameFor(g => g.MaxCapacity)</th>
+    <th>Details</th>
+    </thead>
+    <tbody>
+        @foreach (var garage in Model)
+        {
+            <tr>
+                <th scope="row">@garage.Id</th>
+                <td>@garage.Name</td>
+                <td>@garage.MaxCapacity</td>
+                <td>
+                    <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

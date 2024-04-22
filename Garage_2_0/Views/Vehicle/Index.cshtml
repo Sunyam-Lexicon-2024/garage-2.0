@@ -1,4 +1,4 @@
-﻿@model IndexParkedVehicleViewModel
+﻿@model VehicleIndexViewModel
 
 @{
     ViewBag.Title = "Vehicles";
@@ -33,33 +33,32 @@
         </div>
     </form>
 </div>
-<div class="row">
-    <div class="col-sm-6">
-        <h3 class="mb-3">Vehicles</h3>
-        <table class="table table-bordered">
-            <thead class="table-light">
-                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
-                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
-                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
-                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
-                <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
-                <th>Details</th>
-            </thead>
-            <tbody>
-                @foreach (var vehicle in Model.ParkedVehicles)
-                {
-                    <tr>
-                        <td>@vehicle.RegistrationNumber</td>
-                        <td>@vehicle.Type</td>
-                        <td>@vehicle.Brand</td>
-                        <td>@vehicle.RegisteredAt</td>
-                        <td>@vehicle.Color</td>
-                        <td>
-                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+
+<h3 class="mb-3">@ViewBag.Title</h3>
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
+            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
+            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
+            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
+            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model.ParkedVehicles)
+        {
+            <tr>
+                <td>@vehicle.RegistrationNumber</td>
+                <td>@vehicle.Type</td>
+                <td>@vehicle.Brand</td>
+                <td>@vehicle.RegisteredAt</td>
+                <td>@vehicle.Color</td>
+                <td>
+                    <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

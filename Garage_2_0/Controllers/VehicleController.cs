@@ -4,26 +4,25 @@ using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
 
 namespace Garage_2_0.Controllers
 {
     public class VehicleController(
         IRepository<Garage> garageRepository,
-        IRepository<ParkedVehicle> vehicleRepository) : Controller
+        IRepository<Vehicle> vehicleRepository) : Controller
     {
         private readonly IRepository<Garage> _garageRepository = garageRepository;
-        private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
+        private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
 
         public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
         {
-            var viewModel = new IndexParkedVehicleViewModel();
+            var viewModel = new VehicleIndexViewModel();
 
             var vehicles = await _vehicleRepository.All();
 
             viewModel.ParkedVehicles = vehicles
                 .OrderByDescending(v => v.RegisteredAt)
-                .Select(v => new ParkedVehicleSlimViewModel
+                .Select(v => new VehicleSlimViewModel
                 {
                     Id = v.Id,
                     RegistrationNumber = v.RegistrationNumber,
@@ -42,7 +41,7 @@ namespace Garage_2_0.Controllers
             {
                 viewModel.ParkedVehicles = [viewModel.ParkedVehicles.FirstOrDefault(v => v.RegistrationNumber == regNumber)!];
             }
-            
+
             if (alert is not null)
             {
                 viewModel.Alert = alert;
@@ -54,7 +53,7 @@ namespace Garage_2_0.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var result = await _vehicleRepository.Find(v => v.Id == id);
-            var model = result.Select(v => new ParkedVehicleViewModel
+            var model = result.Select(v => new VehicleViewModel
             {
                 Id = v.Id,
                 Brand = v.Brand,
@@ -73,7 +72,7 @@ namespace Garage_2_0.Controllers
         {
             var garages = await _garageRepository.All();
 
-            var viewModel = new CreateParkedVehicleViewModel
+            var viewModel = new VehicleCreateViewModel
             {
                 Garages = garages.Select(g => new SelectListItem
                 {
@@ -87,11 +86,11 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateParkedVehicleViewModel viewModel)
+        public async Task<IActionResult> Create(VehicleCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                var vehicle = new ParkedVehicle
+                var vehicle = new Vehicle
                 {
                     RegistrationNumber = viewModel.RegistrationNumber!,
                     Type = viewModel.Type,
@@ -135,7 +134,7 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ParkedVehicle viewModel)
+        public async Task<IActionResult> Edit(int id, Vehicle viewModel)
         {
             if (id != viewModel.Id)
             {
@@ -150,7 +149,7 @@ namespace Garage_2_0.Controllers
                 }
                 catch (Exception)
                 {
-                    
+
                     throw;
                 }
                 return RedirectToAction(nameof(Index));
@@ -166,6 +165,6 @@ namespace Garage_2_0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+
     }
 }

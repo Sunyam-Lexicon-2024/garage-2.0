@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Garage_2_0.Models.ViewModels
 {
-    public class CreateParkedVehicleViewModel
+    public class VehicleCreateViewModel
     {
         public VehicleType Type { get; set; }
         [DisplayName("Registration number")]

@@ -13,7 +13,7 @@ services.AddControllersWithViews(options => options.EnableEndpointRouting = fals
 services.AddDbContext<GarageDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("Default")));
 
 // Register repositories to DI container
-services.AddTransient<IRepository<ParkedVehicle>, ParkedVehicleRepository>();
+services.AddTransient<IRepository<Vehicle>, VehicleRepository>();
 services.AddTransient<IRepository<Garage>, GarageRepository>();
 
 var app = builder.Build();
