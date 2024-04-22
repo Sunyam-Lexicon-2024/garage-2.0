@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<ParkedVehicleSlimViewModel>
+@using Garage_2_0.Models.Enums;
 
 @{
     ViewBag.Title = "Vehicles";
 }
 
-<form class="form-control" asp-asp-controller="Vehicle" asp-action="Index" method="get">
+    <h3 class="mb-3">@ViewBag.Title</h3>
+<form asp-controller="Vehicle" asp-action="Index" method="get">
+    <div class="form-control">
+        <label asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType">Vehicle Type</label>
+        <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
+            <select asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType" asp-items="@ParkedVehicleSlimViewModel.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+        </div>
+    </div>
+</form>
+
+    <form class="form-control" asp-asp-controller="Vehicle" asp-action="Index" method="get">
     <div class="form-group">
         <div class="col-md-2 d-flex">
             <input class="form-control" name="regNumber" placeholder="enter vehicle reg#" />
@@ -12,30 +23,33 @@
         </div>
     </div>
 </form>
-
-<h3 class="mb-3">@ViewBag.Title</h3>
-<table class="table table-bordered">
-    <thead class="table-light">
-    <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
-    <th>@Html.DisplayNameFor(x => x.Type)</th>
-    <th>@Html.DisplayNameFor(x => x.Brand)</th>
-    <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
-    <th>@Html.DisplayNameFor(x => x.Color)</th>
-    <th>Details</th>
-    </thead>
-    <tbody>
-        @foreach (var vehicle in Model)
-        {
-            <tr>
-                <td>@vehicle.RegistrationNumber</td>
-                <td>@vehicle.Type</td>
-                <td>@vehicle.Brand</td>
-                <td>@vehicle.RegisteredAt</td>
-                <td>@vehicle.Color</td>
-                <td>
-                    <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-sm-6">
+        <h3 class="mb-3">Vehicles</h3>
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
+                <th>@Html.DisplayNameFor(x => x.Type)</th>
+                <th>@Html.DisplayNameFor(x => x.Brand)</th>
+                <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
+                <th>@Html.DisplayNameFor(x => x.Color)</th>
+                <th>Details</th>
+            </thead>
+            <tbody>
+                @foreach (var vehicle in Model)
+                {
+                    <tr>
+                        <td>@vehicle.RegistrationNumber</td>
+                        <td>@vehicle.Type</td>
+                        <td>@vehicle.Brand</td>
+                        <td>@vehicle.RegisteredAt</td>
+                        <td>@vehicle.Color</td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
