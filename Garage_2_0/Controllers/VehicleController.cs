@@ -51,7 +51,7 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ParkedVehicle viewModel)
+        public async Task<IActionResult> Create(CreateParkedVehicleViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +65,8 @@ namespace Garage_2_0.Controllers
                     RegisteredAt = viewModel.RegisteredAt,
                     Color = viewModel.Color
                 };
+
+                vehicle.RegisteredAt = DateTime.Now;
 
                 await _repository.Create(vehicle);
 
