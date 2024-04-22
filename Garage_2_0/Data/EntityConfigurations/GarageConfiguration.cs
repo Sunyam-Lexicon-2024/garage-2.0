@@ -1,7 +1,6 @@
 ﻿using Garage_2_0.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace Garage_2_0.Data.EntityConfigurations
 {
@@ -9,16 +8,26 @@ namespace Garage_2_0.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Garage> builder)
         {
-            builder.ToTable("Garage");
 
-            var garage = new Garage
+            Garage[] garages = [
+
+            new()
             {
-                ID = 1,
-                Name = "Default Garage One",
-                MaxCapacity = 50,
-            };
+                Id = 1,
+                Name = "Default Garage 1",
+                ParkingSpotCount = 5
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Default Garage 2",
+                ParkingSpotCount = 5
+            },
 
-            builder.HasData(garage);
+            ];
+
+            builder.HasData(garages);
         }
     }
 }
+

@@ -11,7 +11,7 @@
     <thead class="table-light">
     <th>@Html.DisplayNameFor(g => g.Id)</th>
     <th>@Html.DisplayNameFor(g => g.Name)</th>
-    <th>@Html.DisplayNameFor(g => g.MaxCapacity)</th>
+    <th>@Html.DisplayNameFor(g => g.ParkingSpotCount)</th>
     <th>Details</th>
     </thead>
     <tbody>
@@ -20,7 +20,7 @@
             <tr>
                 <th scope="row">@garage.Id</th>
                 <td>@garage.Name</td>
-                <td>@garage.MaxCapacity</td>
+                <td>@garage.ParkingSpotCount</td>
                 <td>
                     <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
                 </td>

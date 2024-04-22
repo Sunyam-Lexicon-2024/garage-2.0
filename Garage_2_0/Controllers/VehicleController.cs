@@ -77,7 +77,7 @@ namespace Garage_2_0.Controllers
                 Garages = garages.Select(g => new SelectListItem
                 {
                     Text = g.Name,
-                    Value = g.ID.ToString()
+                    Value = g.Id.ToString()
                 }).ToList()
             };
 
@@ -97,16 +97,13 @@ namespace Garage_2_0.Controllers
                     Brand = viewModel.Brand!,
                     Model = viewModel.Model!,
                     Wheels = viewModel.Wheels,
-                    RegisteredAt = viewModel.RegisteredAt,
                     Color = viewModel.Color
                 };
 
-                vehicle.RegisteredAt = DateTime.Now;
-
-                var garage = (await _garageRepository.Find(x => x.ID == viewModel.GarageId)).Single();
+                var garage = (await _garageRepository.Find(g => g.Id == viewModel.GarageId)).Single();
                 if (garage is not null)
                 {
-                    vehicle.GarageId = garage.ID;
+                    vehicle.GarageId = garage.Id;
                 }
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
