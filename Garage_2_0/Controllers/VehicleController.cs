@@ -2,16 +2,20 @@ using Garage_2_0.Models;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Garage_2_0.Controllers
 {
-    public class VehicleController(IRepository<ParkedVehicle> repository) : Controller
+    public class VehicleController(
+        IRepository<Garage> garageRepository,
+        IRepository<ParkedVehicle> vehicleRepository) : Controller
     {
-        private readonly IRepository<ParkedVehicle> _repository = repository;
+        private readonly IRepository<Garage> _garageRepository = garageRepository;
+        private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
         public async Task<IActionResult> Index()
         {
-            var vehicles = await _repository.All();
+            var vehicles = await _vehicleRepository.All();
 
             var model = vehicles.Select(x => new ParkedVehicleSlimViewModel
             {
@@ -28,7 +32,7 @@ namespace Garage_2_0.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var result = await _repository.Find(v => v.Id == id);
+            var result = await _vehicleRepository.Find(v => v.Id == id);
             var model = result.Select(x => new ParkedVehicleViewModel
             {
                 Id = x.Id,
@@ -44,9 +48,20 @@ namespace Garage_2_0.Controllers
             return View(model);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var garages = await _garageRepository.All();
+
+            var viewModel = new CreateParkedVehicleViewModel
+            {
+                Garages = garages.Select(x => new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Name
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -68,7 +83,7 @@ namespace Garage_2_0.Controllers
 
                 vehicle.RegisteredAt = DateTime.Now;
 
-                await _repository.Create(vehicle);
+                await _vehicleRepository.Create(vehicle);
 
                 return RedirectToAction(nameof(Index));
             }
