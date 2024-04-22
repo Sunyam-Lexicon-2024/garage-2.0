@@ -125,7 +125,7 @@ namespace Garage_2_0.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            var vehicle = (await _repository.Find(v => v.Id == id)).Single();
+            var vehicle = (await _vehicleRepository.Find(v => v.Id == id)).Single();
             if (vehicle == null)
             {
                 return NotFound();
@@ -146,7 +146,7 @@ namespace Garage_2_0.Controllers
             {
                 try
                 {
-                    await _repository.Update(viewModel);
+                    await _vehicleRepository.Update(viewModel);
                 }
                 catch (Exception)
                 {
@@ -162,7 +162,7 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _repository.Delete(id);
+            await _vehicleRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
