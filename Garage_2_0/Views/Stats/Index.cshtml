@@ -1,0 +1,29 @@
+﻿@model StatsViewModel
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<h1>@ViewData["Title"]</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th> @Html.DisplayNameFor(model => model.TotalWheelCount) </th>
+            <th> @Html.DisplayNameFor(model => model.AccumulatedRevenue) </th>
+            @foreach (var type in Model.VehicleCountList)
+            {
+                <th> @type.Key.ToString() registered </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td> @Html.DisplayFor(model => model.TotalWheelCount) </td>
+            <td> @Html.DisplayFor(model => model.AccumulatedRevenue) </td>
+            @foreach (var type in Model.VehicleCountList)
+            {
+                <td> @type.Value </td>
+            }
+        </tr>
+    </tbody>
+</table>

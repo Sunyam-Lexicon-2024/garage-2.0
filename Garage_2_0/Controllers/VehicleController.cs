@@ -1,4 +1,5 @@
 using Garage_2_0.Models;
+using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ namespace Garage_2_0.Controllers
     {
         private readonly IRepository<ParkedVehicle> _repository = repository;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(VehicleType? selectedVehicleType)
         {
             var vehicles = await _repository.All();
 
@@ -22,6 +23,11 @@ namespace Garage_2_0.Controllers
                 RegisteredAt = x.RegisteredAt,
                 Color = x.Color,
             }).ToList();
+
+            if (selectedVehicleType is not null)
+            {
+                model = model.Where(m => m.Type == selectedVehicleType).ToList();
+            }
 
             return View(model);
         }

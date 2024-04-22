@@ -71,7 +71,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = await _repository.Find(g => g.ID == id);
+            var garage = (await _repository.Find(g => g.ID == id)).Single();
 
             if (garage == null)
             {
@@ -81,9 +81,8 @@ namespace Garage_2_0.Controllers
             return View(garage);
         }
 
-        // use GarageDetailedViewModel
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,MaxCapacity")] Garage garage)
         {
             if (id != garage.ID)
@@ -117,7 +116,11 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _repository.Delete(id);
+            var garageToDelete = await _repository.Delete(id);
+            if (garageToDelete == null)
+            {
+                return NotFound();
+            }
             return RedirectToAction(nameof(Index));
         }
 
