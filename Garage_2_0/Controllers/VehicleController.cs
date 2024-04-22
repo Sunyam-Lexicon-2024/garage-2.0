@@ -20,15 +20,15 @@ namespace Garage_2_0.Controllers
 
             var vehicles = await _vehicleRepository.All();
             model.ParkedVehicles = vehicles
-                .OrderByDescending(x => x.RegisteredAt)
-                .Select(x => new ParkedVehicleSlimViewModel
+                .OrderByDescending(v => v.RegisteredAt)
+                .Select(v => new ParkedVehicleSlimViewModel
                 {
-                    Id = x.Id,
-                    RegistrationNumber = x.RegistrationNumber,
-                    Type = x.Type,
-                    Brand = x.Brand,
-                    RegisteredAt = x.RegisteredAt,
-                    Color = x.Color,
+                    Id = v.Id,
+                    RegistrationNumber = v.RegistrationNumber,
+                    Type = v.Type,
+                    Brand = v.Brand,
+                    RegisteredAt = v.RegisteredAt,
+                    Color = v.Color,
                 }).ToList();
 
             if (alert is not null)
@@ -42,16 +42,16 @@ namespace Garage_2_0.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var result = await _vehicleRepository.Find(v => v.Id == id);
-            var model = result.Select(x => new ParkedVehicleViewModel
+            var model = result.Select(v => new ParkedVehicleViewModel
             {
-                Id = x.Id,
-                Brand = x.Brand,
-                Color = x.Color,
-                Model = x.Model,
-                RegisteredAt = x.RegisteredAt,
-                RegistrationNumber = x.RegistrationNumber,
-                Type = x.Type,
-                Wheels = x.Wheels
+                Id = v.Id,
+                Brand = v.Brand,
+                Color = v.Color,
+                Model = v.Model,
+                RegisteredAt = v.RegisteredAt,
+                RegistrationNumber = v.RegistrationNumber,
+                Type = v.Type,
+                Wheels = v.Wheels
             }).First();
 
             return View(model);
@@ -63,10 +63,10 @@ namespace Garage_2_0.Controllers
 
             var viewModel = new CreateParkedVehicleViewModel
             {
-                Garages = garages.Select(x => new SelectListItem
+                Garages = garages.Select(g => new SelectListItem
                 {
-                    Text = x.Name,
-                    Value = x.ID.ToString()
+                    Text = g.Name,
+                    Value = g.ID.ToString()
                 }).ToList()
             };
 
@@ -81,10 +81,10 @@ namespace Garage_2_0.Controllers
             {
                 var vehicle = new ParkedVehicle
                 {
-                    RegistrationNumber = viewModel.RegistrationNumber,
+                    RegistrationNumber = viewModel.RegistrationNumber!,
                     Type = viewModel.Type,
-                    Brand = viewModel.Brand,
-                    Model = viewModel.Model,
+                    Brand = viewModel.Brand!,
+                    Model = viewModel.Model!,
                     Wheels = viewModel.Wheels,
                     RegisteredAt = viewModel.RegisteredAt,
                     Color = viewModel.Color
