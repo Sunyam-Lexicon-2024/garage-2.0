@@ -165,7 +165,7 @@ namespace Garage_2_0.Controllers
             var vehicle = (await _vehicleRepository.Find(x => x.Id == id)).Single();
             if (vehicle is not null)
             {
-                var model = new CheckoutVehicleViewModel
+                var viewModel = new CheckoutVehicleViewModel
                 {
                     CheckoutAt = DateTime.Now,
                     Vehicle = new ParkedVehicleSlimViewModel
@@ -179,7 +179,7 @@ namespace Garage_2_0.Controllers
                     }
                 };
 
-                return View(vehicle);
+                return View(viewModel);
             }
 
             return View();
