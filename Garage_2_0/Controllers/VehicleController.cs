@@ -16,10 +16,10 @@ namespace Garage_2_0.Controllers
 
         public async Task<IActionResult> Index(AlertViewModel? alert)
         {
-            var model = new IndexParkedVehicleViewModel();
+            var viewModel = new IndexParkedVehicleViewModel();
 
             var vehicles = await _vehicleRepository.All();
-            model.ParkedVehicles = vehicles
+            viewModel.ParkedVehicles = vehicles
                 .OrderByDescending(v => v.RegisteredAt)
                 .Select(v => new ParkedVehicleSlimViewModel
                 {
@@ -33,10 +33,10 @@ namespace Garage_2_0.Controllers
 
             if (alert is not null)
             {
-                model.Alert = alert;
+                viewModel.Alert = alert;
             }
 
-            return View(model);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Details(int id)
