@@ -10,9 +10,11 @@ using System;
 namespace Garage_2_0.Controllers
 {
     public class VehicleController(
+        IConfiguration configuration,
         IRepository<Garage> garageRepository,
         IRepository<ParkedVehicle> vehicleRepository) : Controller
     {
+        private readonly int _hourlyRate = configuration.GetValue<int>("GarageSettings:HourlyRate");
         private readonly IRepository<Garage> _garageRepository = garageRepository;
         private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
@@ -163,26 +165,29 @@ namespace Garage_2_0.Controllers
         public async Task<IActionResult> Checkout(int id)
         {
             var vehicle = (await _vehicleRepository.Find(x => x.Id == id)).Single();
-            if (vehicle is not null)
+            if (vehicle is null)
             {
-                var viewModel = new CheckoutVehicleViewModel
-                {
-                    CheckoutAt = DateTime.Now,
-                    Vehicle = new ParkedVehicleSlimViewModel
-                    {
-                        Id = vehicle.Id,
-                        RegisteredAt = vehicle.RegisteredAt,
-                        RegistrationNumber = vehicle.RegistrationNumber,
-                        Brand = vehicle.Brand,
-                        Color = vehicle.Color,
-                        Type = vehicle.Type,
-                    }
-                };
-
-                return View(viewModel);
+                return NotFound();
             }
 
-            return View();
+            var viewModel = new CheckoutVehicleViewModel
+            {
+                CheckoutAt = DateTime.Now,
+                Vehicle = new ParkedVehicleSlimViewModel
+                {
+                    Id = vehicle.Id,
+                    RegisteredAt = vehicle.RegisteredAt,
+                    RegistrationNumber = vehicle.RegistrationNumber,
+                    Brand = vehicle.Brand,
+                    Color = vehicle.Color,
+                    Type = vehicle.Type,
+                },
+                ParkingPeriod = DateTime.Now - vehicle.RegisteredAt,
+                HourlyRate = _hourlyRate,
+                TotalParkingCost = (DateTime.Now - vehicle.RegisteredAt).Hours * _hourlyRate
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost, ActionName("Delete")]

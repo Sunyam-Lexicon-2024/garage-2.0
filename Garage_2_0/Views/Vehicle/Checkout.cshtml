@@ -4,13 +4,20 @@
     Layout = "_CheckoutLayout";
 }
 
-<h3 class="text-center">Checkout</h3>
+<h3 class="text-center">Checkout Details</h3>
 <ul>
     <li>Parked at: @Model.Vehicle.RegisteredAt</li>
     <li>Checkout at: @Model.CheckoutAt</li>
+    <li>Parking period: @Model.ParkingPeriod.Hours hours</li>
     <li>Registration number: @Model.Vehicle.RegistrationNumber</li>
     <li>Vehicle: @Model.Vehicle.Type</li>
     <li>Brand: @Model.Vehicle.Brand</li>
+    <li>Cost per hour: @Model.HourlyRate SEK</li>
     <li>Total parking cost: @Model.TotalParkingCost SEK</li>
 </ul>
+<div class="my-3">
+    <form asp-controller="Vehicle" asp-action="Delete" asp-route-id="@Model.Vehicle.Id" method="post">
+        <button type="submit" class="btn btn-danger">Confirm</button>
+    </form>
+</div>
 <a asp-controller="Vehicle" asp-action="Index" class="mt-3">Back to vehicles</a>
