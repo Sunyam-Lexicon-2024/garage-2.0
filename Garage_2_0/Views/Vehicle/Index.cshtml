@@ -44,6 +44,7 @@
                 <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
                 <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
                 <th>Details</th>
+                <th>Checkout</th>
             </thead>
             <tbody>
                 @foreach (var vehicle in Model.ParkedVehicles)
@@ -56,6 +57,9 @@
                         <td>@vehicle.Color</td>
                         <td>
                             <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                        </td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Checkout" asp-route-id="@vehicle.Id">Checkout</a>
                         </td>
                     </tr>
                 }
