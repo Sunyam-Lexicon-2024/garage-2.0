@@ -54,4 +54,6 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         await _context.SaveChangesAsync();
         return updatedGarage;
     }
+
+ 
 }

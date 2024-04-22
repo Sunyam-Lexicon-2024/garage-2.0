@@ -3,6 +3,7 @@ using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Garage_2_0.Controllers
 {
@@ -83,5 +84,51 @@ namespace Garage_2_0.Controllers
             }
             return View(viewModel);
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var vehicle = (await _repository.Find(v => v.Id == id)).Single();
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ParkedVehicle viewModel)
+        {
+            if (id != viewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _repository.Update(viewModel);
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(viewModel);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _repository.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        
     }
 }
