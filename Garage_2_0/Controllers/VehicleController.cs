@@ -92,9 +92,7 @@ namespace Garage_2_0.Controllers
 
                 vehicle.RegisteredAt = DateTime.Now;
 
-                var result = await _garageRepository.Find(x => x.ID == viewModel.GarageId);
-                var garage = result.FirstOrDefault();
-
+                var garage = (await _garageRepository.Find(x => x.ID == viewModel.GarageId)).Single();
                 if (garage is not null)
                 {
                     vehicle.GarageId = garage.ID;
