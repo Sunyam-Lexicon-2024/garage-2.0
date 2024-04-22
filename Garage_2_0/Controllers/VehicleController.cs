@@ -159,11 +159,26 @@ namespace Garage_2_0.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Checkout(int id)
         {
             var vehicle = (await _vehicleRepository.Find(x => x.Id == id)).Single();
             if (vehicle is not null)
             {
+                var model = new CheckoutVehicleViewModel
+                {
+                    CheckoutAt = DateTime.Now,
+                    Vehicle = new ParkedVehicleSlimViewModel
+                    {
+                        Id = vehicle.Id,
+                        RegisteredAt = vehicle.RegisteredAt,
+                        RegistrationNumber = vehicle.RegistrationNumber,
+                        Brand = vehicle.Brand,
+                        Color = vehicle.Color,
+                        Type = vehicle.Type,
+                    }
+                };
+
                 return View(vehicle);
             }
 
