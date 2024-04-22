@@ -13,6 +13,7 @@ namespace Garage_2_0.Models.ViewModels
         [DisplayName("Parked At")]
         public DateTime RegisteredAt { get; set; }
         public Color Color { get; set; }
+        [DisplayName("Parking Spot IDs")]
         public string ParkingSpotIds { get; set; } = default!;
     }
 }

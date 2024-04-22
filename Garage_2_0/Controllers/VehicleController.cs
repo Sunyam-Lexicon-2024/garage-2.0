@@ -1,4 +1,5 @@
 using Garage_2_0.Models;
+using Garage_2_0.Models.Configurations;
 using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Repositories;
@@ -8,13 +9,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Garage_2_0.Controllers
 {
     public class VehicleController(
+        ILogger<VehicleController> logger,
         IRepository<Garage> garageRepository,
         IRepository<ParkingSpot> parkingSpotRepository,
         IRepository<Vehicle> vehicleRepository) : Controller
     {
+        private readonly ILogger _logger = logger;
         private readonly IRepository<Garage> _garageRepository = garageRepository;
         private readonly IRepository<ParkingSpot> _parkingSpotRepository = parkingSpotRepository;
         private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
+        private readonly SpotAllocationRules _spotAllocationRules = new();
 
         public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
         {
@@ -53,24 +57,29 @@ namespace Garage_2_0.Controllers
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var result = await _vehicleRepository.Find(v => v.Id == id);
-            var model = result.Select(v => new VehicleViewModel
+            var vehicle = (await _vehicleRepository.Find(v => v.Id == id)).Single();
+            if (vehicle is null)
             {
-                Id = v.Id,
-                Brand = v.Brand,
-                Color = v.Color,
-                Model = v.Model,
-                RegisteredAt = v.RegisteredAt,
-                RegistrationNumber = v.RegistrationNumber,
-                Type = v.Type,
-                Wheels = v.Wheels
-            }).First();
+                _logger.LogError("{Message}", $"Could not find vehicle with ID [{id}]");
+                return NotFound();
+            }
 
-            return View(model);
+            VehicleViewModel viewModel = new()
+            {
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Color = vehicle.Color,
+                Model = vehicle.Model,
+                RegisteredAt = vehicle.RegisteredAt,
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Type = vehicle.Type,
+                Wheels = vehicle.Wheels
+            };
+
+            return View(viewModel);
         }
-
         public async Task<IActionResult> Create()
         {
             var garages = await _garageRepository.All();
@@ -91,6 +100,22 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VehicleCreateViewModel viewModel)
         {
+            int maxOccupied = _spotAllocationRules.Collection[viewModel.Type].MaxOccupied;
+            int requiredSpotCount = _spotAllocationRules.Collection[viewModel.Type].RequiredSpotCount;
+
+            var garageSpots = await _parkingSpotRepository.Find(s => s.GarageId == viewModel.GarageId);
+            var freeSpots = GetSpots(garageSpots, maxOccupied, requiredSpotCount, viewModel.Type);
+
+            if (!ValidSpotSequence(freeSpots))
+            {
+                ModelState.AddModelError("InvalidSpotSequence", "Not enough spots for vehicle type.");
+            }
+
+            if (freeSpots.Count() < requiredSpotCount)
+            {
+                ModelState.AddModelError("GarageFull", "Garage is full.");
+            }
+
             if (ModelState.IsValid)
             {
                 var vehicle = new Vehicle
@@ -103,10 +128,11 @@ namespace Garage_2_0.Controllers
                     Color = viewModel.Color
                 };
 
-                var garage = (await _garageRepository.Find(g => g.Id == viewModel.GarageId)).Single();
-                if (garage is not null)
+                foreach (var spot in freeSpots)
                 {
-                    vehicle.GarageId = garage.Id;
+                    spot.ContainsVehicleType = vehicle.Type;
+                    spot.Vehicles.Add(vehicle);
+                    vehicle.ParkingSpots.Add(spot);
                 }
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
@@ -159,15 +185,52 @@ namespace Garage_2_0.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            await _vehicleRepository.Delete(id);
-            return RedirectToAction(nameof(Index));
+            if (id is null)
+            {
+                _logger.LogError("{Message}", $"garage with ID [{id}] not found");
+                return NotFound();
+            }
+            else
+            {
+                var relatedSpots = _parkingSpotRepository.GetManyToManyRelation((int)id).ToList();
+                var vehicleToDelete = await _vehicleRepository.Delete((int)id);
+                foreach (var relatedSpot in relatedSpots)
+                {
+                    relatedSpot.ContainsVehicleType = null;
+                    await _parkingSpotRepository.Update(relatedSpot);
+                }
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private static string AssembleSpotIdString(ICollection<ParkingSpot> spots)
         {
             return string.Join(", ", spots.Select(s => s.Id).ToArray());
+        }
+
+        private IEnumerable<ParkingSpot> GetSpots(IEnumerable<ParkingSpot> garageSpots,
+                                          int maxOccupied,
+                                          int requiredSpotCount,
+                                          VehicleType vehicleType)
+        {
+            return garageSpots
+                .Where(spot => _vehicleRepository.GetManyToManyRelation(spot.Id).Count() <= maxOccupied)
+                .Where(spot => spot.ContainsVehicleType == vehicleType || spot.ContainsVehicleType == null)
+                .Take(requiredSpotCount);
+        }
+
+        private static bool ValidSpotSequence(IEnumerable<ParkingSpot> freeSpots)
+        {
+            for (int i = 0; i < freeSpots.Count() - 1; i++)
+            {
+                if (freeSpots.ElementAt(i + 1).Id - freeSpots.ElementAt(i).Id != 1)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
