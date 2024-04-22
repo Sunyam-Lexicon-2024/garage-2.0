@@ -14,11 +14,12 @@ namespace Garage_2_0.Controllers
         private readonly IRepository<Garage> _garageRepository = garageRepository;
         private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
-        public async Task<IActionResult> Index(AlertViewModel? alert)
+        public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
         {
             var viewModel = new IndexParkedVehicleViewModel();
 
             var vehicles = await _vehicleRepository.All();
+
             viewModel.ParkedVehicles = vehicles
                 .OrderByDescending(v => v.RegisteredAt)
                 .Select(v => new ParkedVehicleSlimViewModel
@@ -31,6 +32,16 @@ namespace Garage_2_0.Controllers
                     Color = v.Color,
                 }).ToList();
 
+            if (selectedVehicleType is not null)
+            {
+                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(regNumber))
+            {
+                viewModel.ParkedVehicles = [viewModel.ParkedVehicles.FirstOrDefault(v => v.RegistrationNumber == regNumber)!];
+            }
+            
             if (alert is not null)
             {
                 viewModel.Alert = alert;

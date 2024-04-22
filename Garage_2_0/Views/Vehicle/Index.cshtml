@@ -16,6 +16,23 @@
             break;
     }
 }
+
+<div class="form-control">
+    <form asp-controller="Vehicle" asp-action="Index" method="get">
+        <label asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType">Vehicle Type</label>
+        <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
+            <select asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType" asp-items="@ParkedVehicleSlimViewModel.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+        </div>
+    </form>
+    <form asp-asp-controller="Vehicle" asp-action="Index" method="get">
+        <div class="form-group mt-2">
+            <div class="col-md-2 d-flex">
+                <input class="form-control" name="regNumber" placeholder="Enter Vehicle Reg#" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
 <div class="row">
     <div class="col-sm-6">
         <h3 class="mb-3">Vehicles</h3>
