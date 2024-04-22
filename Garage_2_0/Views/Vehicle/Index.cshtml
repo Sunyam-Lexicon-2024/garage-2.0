@@ -38,11 +38,12 @@
 <table class="table table-bordered">
     <thead class="table-light">
         <tr>
-            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
-            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
-            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
-            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
-            <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().RegistrationNumber)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().Type)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().Brand)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().RegisteredAt)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().Color)</th>
+            <th>@Html.DisplayNameFor(vm => vm.ParkedVehicles.First().ParkingSpotIds)</th>
             <th>Details</th>
         </tr>
     </thead>
@@ -55,6 +56,7 @@
                 <td>@vehicle.Brand</td>
                 <td>@vehicle.RegisteredAt</td>
                 <td>@vehicle.Color</td>
+                <td>@vehicle.ParkingSpotIds</td>
                 <td>
                     <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
                 </td>

@@ -9,9 +9,11 @@ namespace Garage_2_0.Controllers
 {
     public class VehicleController(
         IRepository<Garage> garageRepository,
+        IRepository<ParkingSpot> parkingSpotRepository,
         IRepository<Vehicle> vehicleRepository) : Controller
     {
         private readonly IRepository<Garage> _garageRepository = garageRepository;
+        private readonly IRepository<ParkingSpot> _parkingSpotRepository = parkingSpotRepository;
         private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
 
         public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
@@ -30,6 +32,7 @@ namespace Garage_2_0.Controllers
                     Brand = v.Brand,
                     RegisteredAt = v.RegisteredAt,
                     Color = v.Color,
+                    ParkingSpotIds = AssembleSpotIdString([.. _parkingSpotRepository.GetManyToManyRelation(v.Id)])
                 }).ToList();
 
             if (selectedVehicleType is not null)
@@ -162,6 +165,9 @@ namespace Garage_2_0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        private static string AssembleSpotIdString(ICollection<ParkingSpot> spots)
+        {
+            return string.Join(", ", spots.Select(s => s.Id).ToArray());
+        }
     }
 }
