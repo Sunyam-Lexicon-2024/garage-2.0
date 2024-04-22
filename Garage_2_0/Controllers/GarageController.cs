@@ -117,7 +117,11 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _repository.Delete(id);
+            var garageToDelete = await _repository.Delete(id);
+            if (garageToDelete == null)
+            {
+                return NotFound();
+            }
             return RedirectToAction(nameof(Index));
         }
 
