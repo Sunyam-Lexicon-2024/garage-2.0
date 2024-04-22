@@ -10,11 +10,11 @@ namespace Garage_2_0.Controllers
     {
         private readonly IRepository<ParkedVehicle> _repository = repository;
 
-        public async Task<IActionResult> Index(VehicleType? selectedVehicleType)
+        public async Task<IActionResult> Index(VehicleType? selectedVehicleType, string? regNumber)
         {
             var vehicles = await _repository.All();
 
-            var model = vehicles.Select(x => new ParkedVehicleSlimViewModel
+            var viewModel = vehicles.Select(x => new ParkedVehicleSlimViewModel
             {
                 Id = x.Id,
                 RegistrationNumber = x.RegistrationNumber,
@@ -26,10 +26,15 @@ namespace Garage_2_0.Controllers
 
             if (selectedVehicleType is not null)
             {
-                model = model.Where(m => m.Type == selectedVehicleType).ToList();
+                viewModel = viewModel.Where(m => m.Type == selectedVehicleType).ToList();
             }
 
-            return View(model);
+            if (!string.IsNullOrEmpty(regNumber))
+            {
+                viewModel = [viewModel.FirstOrDefault(v => v.RegistrationNumber == regNumber)];
+            }
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Details(int id)
