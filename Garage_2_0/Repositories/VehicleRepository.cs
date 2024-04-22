@@ -53,7 +53,12 @@ namespace Garage_2_0.Repositories
             await _context.SaveChangesAsync();
             return updatedVehicle;
         }
-
-
+        public IQueryable<Vehicle> GetManyToManyRelation(int id)
+        {
+            return from parkingSpot in _context.ParkingSpots
+                   where parkingSpot.Id == id
+                   from vehicle in parkingSpot.Vehicles
+                   select vehicle;
+        }
     }
 }
