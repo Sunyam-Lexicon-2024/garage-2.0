@@ -6,45 +6,50 @@
 }
 
 <h3 class="mb-3">@ViewBag.Title</h3>
-<div class="form-control">
-    <form asp-controller="Vehicle" asp-action="Index" method="get">
-        <label asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType">Vehicle Type</label>
-        <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
-            <select asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType" asp-items="@ParkedVehicleSlimViewModel.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+<form asp-controller="Vehicle" asp-action="Index" method="get">
+    <label asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType">Vehicle Type</label>
+    <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
+        <select asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType" asp-items="@ParkedVehicleSlimViewModel.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+    </div>
+</form>
+<form asp-asp-controller="Vehicle" asp-action="Index" method="get">
+    <div class="form-group mt-2">
+        <div class="col-md-2 d-flex">
+            <input class="form-control" name="regNumber" placeholder="Enter Vehicle Reg#" />
+            <input type="submit" value="Search" class="btn btn-primary ms-3" />
         </div>
-    </form>
-    <form asp-asp-controller="Vehicle" asp-action="Index" method="get">
-        <div class="form-group mt-2">
-            <div class="col-md-2 d-flex">
-                <input class="form-control" name="regNumber" placeholder="Enter Vehicle Reg#" />
-                <input type="submit" value="Search" class="btn btn-primary" />
-            </div>
-        </div>
-    </form>
+    </div>
+</form>
+<div class="row mt-3">
+    <div class="col-sm-10">
+        <table class="table table-bordered">
+            <thead class="table-light">
+            <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
+            <th>@Html.DisplayNameFor(x => x.Type)</th>
+            <th>@Html.DisplayNameFor(x => x.Brand)</th>
+            <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
+            <th>@Html.DisplayNameFor(x => x.Color)</th>
+            <th>Details</th>
+            <th>Checkout</th>
+            </thead>
+            <tbody>
+                @foreach (var vehicle in Model)
+                {
+                    <tr>
+                        <td>@vehicle?.RegistrationNumber</td>
+                        <td>@vehicle?.Type</td>
+                        <td>@vehicle?.Brand</td>
+                        <td>@vehicle?.RegisteredAt</td>
+                        <td>@vehicle?.Color</td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle?.Id">Details</a>
+                        </td>
+                        <td>
+                            <a asp-controller="Vehicle" asp-action="Delete" asp-route-id="@vehicle?.Id">Checkout</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<table class="table table-bordered">
-    <thead class="table-light">
-    <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
-    <th>@Html.DisplayNameFor(x => x.Type)</th>
-    <th>@Html.DisplayNameFor(x => x.Brand)</th>
-    <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
-    <th>@Html.DisplayNameFor(x => x.Color)</th>
-    <th>Details</th>
-    </thead>
-    <tbody>
-        @foreach (var vehicle in Model)
-        {
-            <tr>
-                <td>@vehicle?.RegistrationNumber</td>
-                <td>@vehicle?.Type</td>
-                <td>@vehicle?.Brand</td>
-                <td>@vehicle?.RegisteredAt</td>
-                <td>@vehicle?.Color</td>
-                <td>
-                    <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle?.Id">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
