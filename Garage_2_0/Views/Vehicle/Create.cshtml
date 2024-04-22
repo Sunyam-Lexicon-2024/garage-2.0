@@ -1,4 +1,4 @@
-﻿@model ParkedVehicle;
+﻿@model CreateParkedVehicleViewModel;
 
 @{
     ViewData["Title"] = "Park vehicle";
@@ -11,6 +11,16 @@
                 <h3 class="mb-3">Park your vehicle</h3>
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="GarageId" class="control-label"></label>
+                        <select asp-for="GarageId" class="form-control">
+                            @foreach (var option in Model.Garages)
+                            {
+                                <option value="@option.Value">@option.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
                     <div class="mb-3">
                     <label asp-for="Type" class="control-label"></label>
                     <select asp-for="Type" class="form-control">
@@ -42,13 +52,13 @@
                         <span asp-validation-for="Wheels" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
-                        <label asp-for="RegisteredAt" class="control-label"></label>
-                        <input asp-for="RegisteredAt" class="form-control" />
-                        <span asp-validation-for="RegisteredAt" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
                         <label asp-for="Color" class="control-label"></label>
-                        <input asp-for="Color" class="form-control" />
+                        <select asp-for="Color" class="form-control">
+                            @foreach (var color in Enum.GetValues(typeof(Color)))
+                            {
+                                <option value="@color">@color</option>
+                            }
+                        </select>
                         <span asp-validation-for="Color" class="text-danger"></span>
                     </div>
                     <input type="submit" value="Submit" class="btn btn-primary" />

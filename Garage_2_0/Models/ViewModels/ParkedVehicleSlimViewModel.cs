@@ -8,14 +8,11 @@ namespace Garage_2_0.Models.ViewModels
     {
         public int Id { get; set; }
         [DisplayName("Registration Number")]
-        public string? RegistrationNumber { get; set; }
+        public string? RegistrationNumber { get; set; } = default!;
         public VehicleType Type { get; set; }
         public string? Brand { get; set; }
         [DisplayName("Parked At")]
         public DateTime RegisteredAt { get; set; }
         public Color Color { get; set; }
-
-        public readonly static SelectList VehicleTypes = new(Enum.GetValues(typeof(VehicleType)));
-        public static VehicleType? SelectedVehicleType { get; set; }
     }
 }

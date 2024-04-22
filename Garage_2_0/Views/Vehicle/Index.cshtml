@@ -1,8 +1,20 @@
-﻿@model IEnumerable<ParkedVehicleSlimViewModel>
-@using Garage_2_0.Models.Enums;
+@model IndexParkedVehicleViewModel
 
 @{
     ViewBag.Title = "Vehicles";
+}
+
+@if (Model.Alert is not null && Model.Alert.IsActive)
+{
+    switch (Model.Alert.Type)
+    {
+        case AlertType.Success:
+            <div class="alert alert-success">@Model.Alert.Message</div>
+            break;
+        case AlertType.Danger:
+            <div class="alert alert-danger">@Model.Alert.Message</div>
+            break;
+    }
 }
 
 <h3 class="mb-3">@ViewBag.Title</h3>
