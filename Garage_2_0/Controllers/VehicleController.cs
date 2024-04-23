@@ -37,10 +37,10 @@ namespace Garage_2_0.Controllers
                 vehicles = vehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
             }
 
-            var viewModel = new IndexParkedVehicleViewModel();
-
-            viewModel.ParkedVehicles = vehicles
-                    .Select(v => new ParkedVehicleSlimViewModel
+            var viewModel = new VehicleIndexViewModel
+            {
+                ParkedVehicles = vehicles
+                    .Select(v => new VehicleSlimViewModel
                     {
                         Id = v.Id,
                         RegistrationNumber = v.RegistrationNumber,
@@ -48,17 +48,9 @@ namespace Garage_2_0.Controllers
                         Brand = v.Brand,
                         RegisteredAt = v.RegisteredAt,
                         Color = v.Color,
-                    }).ToList();
-
-            if (selectedVehicleType is not null)
-            {
-                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(regNumber))
-            {
-                viewModel.ParkedVehicles = [viewModel.ParkedVehicles.FirstOrDefault(v => v.RegistrationNumber == regNumber)!];
-            }
+                        ParkingSpotIds = AssembleSpotIdString([.. _parkingSpotRepository.GetManyToManyRelation(v.Id)])
+                    }).ToList()
+            };
 
             if (alert is not null)
             {
@@ -93,8 +85,10 @@ namespace Garage_2_0.Controllers
         }
         public async Task<IActionResult> Create()
         {
-            var viewModel = new CreateParkedVehicleViewModel();
-            viewModel.Garages = await GetGarageSelectOptions();
+            VehicleCreateViewModel viewModel = new()
+            {
+                Garages = await GetGarageSelectOptions()
+            };
 
             return View(viewModel);
         }
@@ -111,22 +105,23 @@ namespace Garage_2_0.Controllers
 
             if (!ValidSpotSequence(freeSpots))
             {
-                ModelState.AddModelError("InvalidSpotSequence", "Not enough spots for vehicle type.");
+                ModelState.AddModelError("InvalidSpotSequence", $"Not enough spots for vehicle type (Required amount: {requiredSpotCount})");
             }
 
             if (freeSpots.Count() < requiredSpotCount)
             {
-                ModelState.AddModelError("GarageFull", "Garage is full.");
+                ModelState.AddModelError("GarageFull", "Garage is full");
             }
 
             if (ModelState.IsValid)
             {
                 if (await _vehicleRepository.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
                 {
-                    ModelState.AddModelError("RegistrationNumber", "Registreringsnumret finns redan, vänligen ange ett annat nummer.");
+                    ModelState.AddModelError("RegistrationNumber", $"Vehicle with {viewModel.RegistrationNumber} already in garage");
                     return View(viewModel);
                 }
-                var vehicle = new ParkedVehicle
+
+                Vehicle vehicle = new()
                 {
                     RegistrationNumber = viewModel.RegistrationNumber!,
                     Type = viewModel.Type,
@@ -166,7 +161,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            CreateParkedVehicleViewModel viewModel = new()
+            VehicleCreateViewModel viewModel = new()
             {
                 Id = vehicle.Id,
                 RegistrationNumber = vehicle.RegistrationNumber,
@@ -184,7 +179,7 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CreateParkedVehicleViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, VehicleCreateViewModel viewModel)
         {
             if (id != viewModel.Id)
             {
@@ -224,7 +219,7 @@ namespace Garage_2_0.Controllers
                 var viewModel = new CheckoutVehicleViewModel
                 {
                     CheckoutAt = DateTime.Now,
-                    Vehicle = new ParkedVehicleSlimViewModel
+                    Vehicle = new VehicleSlimViewModel
                     {
                         Id = removedVehicle.Id,
                         RegisteredAt = removedVehicle.RegisteredAt,
@@ -240,21 +235,6 @@ namespace Garage_2_0.Controllers
 
                 return View(viewModel);
             }
-
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DownloadCheckoutReceipt(CheckoutVehicleViewModel viewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            string json = JsonSerializer.Serialize(viewModel);
-            System.IO.File.WriteAllText(@"C:\", json);
 
             return View();
         }

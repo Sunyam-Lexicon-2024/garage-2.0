@@ -9,10 +9,12 @@
 <a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
 <table class="table table-bordered">
     <thead class="table-light">
-    <th>@Html.DisplayNameFor(g => g.Id)</th>
-    <th>@Html.DisplayNameFor(g => g.Name)</th>
-    <th>@Html.DisplayNameFor(g => g.ParkingSpotCount)</th>
-    <th>Details</th>
+        <tr>
+            <th>@Html.DisplayNameFor(g => g.Id)</th>
+            <th>@Html.DisplayNameFor(g => g.Name)</th>
+            <th>@Html.DisplayNameFor(g => g.ParkingSpotCount)</th>
+            <th>Details</th>
+        </tr>
     </thead>
     <tbody>
         @foreach (var garage in Model)

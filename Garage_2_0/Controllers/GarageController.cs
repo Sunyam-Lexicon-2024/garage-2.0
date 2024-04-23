@@ -1,8 +1,8 @@
 ﻿using Garage_2_0.Models;
+using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Models.ViewModels.Garage;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2_0.Controllers
 {
@@ -114,8 +114,8 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            garage.Name = viewModel.Name;
-            garage.MaxCapacity = viewModel.MaxCapacity;
+            garage.Name = viewModel.Name!;
+            garage.ParkingSpotCount = viewModel.ParkingSpotCount;
 
             await _repository.Update(garage);
             return RedirectToAction(nameof(Index));

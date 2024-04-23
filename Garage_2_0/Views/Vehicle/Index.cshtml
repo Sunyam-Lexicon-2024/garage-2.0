@@ -36,7 +36,7 @@
 <div class="row">
     <div class="col-sm-6">
         <h3 class="mb-3">Vehicles</h3>
-        @if (Model.ParkedVehicles is null || Model.ParkedVehicles.Count() is 0)
+        @if (!Model.ParkedVehicles.Any())
         {
             <p>No search results</p>
         }
@@ -44,11 +44,12 @@
         {
             <table class="table table-bordered">
                 <thead class="table-light">
-                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
-                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
-                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
-                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
-                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().RegistrationNumber)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Type)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Brand)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().RegisteredAt)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Color)</th>
+                    <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().ParkingSpotIds)</th>
                     <th>Details</th>
                     <th>Checkout</th>
                 </thead>
@@ -61,6 +62,7 @@
                             <td>@vehicle.Brand</td>
                             <td>@vehicle.RegisteredAt</td>
                             <td>@vehicle.Color</td>
+                            <td>@vehicle.ParkingSpotIds</td>
                             <td>
                                 <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
                             </td>
