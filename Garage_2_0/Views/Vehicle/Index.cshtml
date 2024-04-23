@@ -62,10 +62,10 @@
                             <td>@vehicle.RegisteredAt</td>
                             <td>@vehicle.Color</td>
                             <td>
-                                <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                                <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-primary">Details</a>
                             </td>
                             <td>
-                                <a asp-controller="Vehicle" asp-action="Checkout" asp-route-id="@vehicle.Id">Checkout</a>
+                                <a asp-controller="Vehicle" asp-action="Checkout" asp-route-id="@vehicle.Id" class="btn btn-danger">Checkout</a>
                             </td>
                         </tr>
                     }
