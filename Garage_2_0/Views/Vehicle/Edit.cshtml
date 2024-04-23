@@ -1,48 +1,32 @@
-﻿@model Garage_2_0.Models.ParkedVehicle
+﻿@model CreateParkedVehicleViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
 <form asp-action="Edit">
-
-    <div class="form-group">
-        <label asp-for="RegistrationNumber" class="control-label"></label>
-        <input asp-for="RegistrationNumber" class="form-control" />
-        <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
-    </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="RegistrationNumber" />
     <div class="mb-3">
-        <label asp-for="Type" class="control-label"></label>
-        <select asp-for="Type" class="form-control">
-            @foreach (var type in Enum.GetValues(typeof(VehicleType)))
-            {
-                <option value="@type">@type</option>
-            }
-        </select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-
         <div class="form-group">
-        <label asp-for="Brand" class="control-label"></label>
-        <input asp-for="Brand" class="form-control" />
-        <span asp-validation-for="Brand" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Model" class="control-label"></label>
-        <input asp-for="Model" class="form-control" />
-        <span asp-validation-for="Model" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Wheels" class="control-label"></label>
-        <input asp-for="Wheels" class="form-control" />
-        <span asp-validation-for="Wheels" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="RegisteredAt" class="control-label"></label>
-        <input asp-for="RegisteredAt" class="form-control" />
-        <span asp-validation-for="RegisteredAt" class="text-danger"></span>
-    </div>
+            <label asp-for="Brand" class="control-label"></label>
+            <input asp-for="Brand" class="form-control" />
+            <span asp-validation-for="Brand" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Model" class="control-label"></label>
+            <input asp-for="Model" class="form-control" />
+            <span asp-validation-for="Model" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Wheels" class="control-label"></label>
+            <input asp-for="Wheels" class="form-control" />
+            <span asp-validation-for="Wheels" class="text-danger"></span>
+        </div>
         <div class="mb-3">
             <label asp-for="Color" class="control-label"></label>
             <select asp-for="Color" class="form-control">
@@ -54,9 +38,9 @@
             <span asp-validation-for="Color" class="text-danger"></span>
         </div>
 
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
 </form>
 
 <div>

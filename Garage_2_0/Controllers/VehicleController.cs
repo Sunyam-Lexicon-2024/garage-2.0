@@ -105,6 +105,7 @@ namespace Garage_2_0.Controllers
                 if (garage is not null)
                 {
                     vehicle.GarageId = garage.Id;
+                    vehicle.Garage = garage;
                 }
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
@@ -125,16 +126,31 @@ namespace Garage_2_0.Controllers
         {
 
             var vehicle = (await _vehicleRepository.Find(v => v.Id == id)).Single();
+
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+
+            CreateParkedVehicleViewModel viewModel = new()
+            {
+                Id = vehicle.Id,
+                RegistrationNumber = vehicle.RegistrationNumber,
+                RegisteredAt = vehicle.RegisteredAt,
+                Type = vehicle.Type,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Wheels = vehicle.Wheels,
+                Color = vehicle.Color,
+                GarageId = vehicle.GarageId
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ParkedVehicle viewModel)
+        public async Task<IActionResult> Edit(int id, CreateParkedVehicleViewModel viewModel)
         {
             if (id != viewModel.Id)
             {
@@ -143,16 +159,23 @@ namespace Garage_2_0.Controllers
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
-                    await _vehicleRepository.Update(viewModel);
+                    var vehicleToUpdate = (await _vehicleRepository.Find(v => v.Id == viewModel.Id)).Single();
+
+                    vehicleToUpdate.Color = viewModel.Color;
+                    vehicleToUpdate.Brand = viewModel.Brand ?? "unknown";
+                    vehicleToUpdate.Model = viewModel.Model ?? "unknown";
+                    vehicleToUpdate.Wheels = viewModel.Wheels;
+
+                    await _vehicleRepository.Update(vehicleToUpdate);
                 }
                 catch (Exception)
                 {
-                    
                     throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = viewModel.Id });
             }
             return View(viewModel);
         }

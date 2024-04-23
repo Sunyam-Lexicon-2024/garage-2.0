@@ -7,6 +7,7 @@ namespace Garage_2_0.Models.ViewModels.Vehicle
 {
     public class CreateParkedVehicleViewModel
     {
+        public int Id { get; set; }
         [Required]
         public VehicleType Type { get; set; }
 
