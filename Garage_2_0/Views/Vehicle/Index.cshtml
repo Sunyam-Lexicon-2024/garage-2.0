@@ -36,6 +36,7 @@
 <div class="row">
     <div class="col-sm-6">
         <h3 class="mb-3">Vehicles</h3>
+        <a class="btn btn-primary mb-3" asp-controller="Vehicle" asp-action="Create">Park</a>
         @if (Model.ParkedVehicles is null || Model.ParkedVehicles.Count() is 0)
         {
             <p>No search results</p>
