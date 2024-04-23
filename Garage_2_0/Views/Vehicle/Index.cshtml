@@ -1,41 +1,76 @@
-﻿@model IEnumerable<ParkedVehicleSlimViewModel>
-@using Garage_2_0.Models.Enums;
+﻿@model IndexParkedVehicleViewModel
 
 @{
     ViewBag.Title = "Vehicles";
 }
 
-<h3 class="mb-3">@ViewBag.Title</h3>
-<form asp-controller="Vehicle" asp-action="Index" method="get">
-    <div class="form-control">
-        <label asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType">Vehicle Type</label>
+@if (Model.Alert is not null && Model.Alert.IsActive)
+{
+    switch (Model.Alert.Type)
+    {
+        case AlertType.Success:
+            <div class="alert alert-success">@Model.Alert.Message</div>
+            break;
+        case AlertType.Danger:
+            <div class="alert alert-danger">@Model.Alert.Message</div>
+            break;
+    }
+}
+
+<div class="form-control">
+    <form asp-controller="Vehicle" asp-action="Index" method="get">
+        <label asp-for="@Model.SelectedVehicleType">Vehicle Type</label>
         <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
-            <select asp-for="@ParkedVehicleSlimViewModel.SelectedVehicleType" asp-items="@ParkedVehicleSlimViewModel.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+            <select asp-for="@Model.SelectedVehicleType" asp-items="@Model.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
         </div>
-    </div>
-</form>
-<table class="table">
-    <thead class="table-light">
-    <th>@Html.DisplayNameFor(x => x.RegistrationNumber)</th>
-    <th>@Html.DisplayNameFor(x => x.Type)</th>
-    <th>@Html.DisplayNameFor(x => x.Brand)</th>
-    <th>@Html.DisplayNameFor(x => x.RegisteredAt)</th>
-    <th>@Html.DisplayNameFor(x => x.Color)</th>
-    <th>Details</th>
-    </thead>
-    <tbody>
-        @foreach (var vehicle in Model)
+    </form>
+    <form asp-controller="Vehicle" asp-action="Index" method="get">
+        <div class="form-group mt-2">
+            <div class="col-md-2 d-flex">
+                <input class="form-control" asp-for="@Model.RegNumber" placeholder="Enter Vehicle Reg#" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <h3 class="mb-3">Vehicles</h3>
+        @if (Model.ParkedVehicles is null || Model.ParkedVehicles.Count() is 0)
         {
-            <tr>
-                <td>@vehicle.RegistrationNumber</td>
-                <td>@vehicle.Type</td>
-                <td>@vehicle.Brand</td>
-                <td>@vehicle.RegisteredAt</td>
-                <td>@vehicle.Color</td>
-                <td>
-                    <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
-                </td>
-            </tr>
+            <p>No search results</p>
         }
-    </tbody>
-</table>
+        else
+        {
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegistrationNumber)</th>
+                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Type)</th>
+                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Brand)</th>
+                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().RegisteredAt)</th>
+                    <th>@Html.DisplayNameFor(x => x.ParkedVehicles.First().Color)</th>
+                    <th>Details</th>
+                    <th>Checkout</th>
+                </thead>
+                <tbody>
+                    @foreach (var vehicle in Model.ParkedVehicles)
+                    {
+                        <tr>
+                            <td>@vehicle.RegistrationNumber</td>
+                            <td>@vehicle.Type</td>
+                            <td>@vehicle.Brand</td>
+                            <td>@vehicle.RegisteredAt</td>
+                            <td>@vehicle.Color</td>
+                            <td>
+                                <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id">Details</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Vehicle" asp-action="Checkout" asp-route-id="@vehicle.Id">Checkout</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

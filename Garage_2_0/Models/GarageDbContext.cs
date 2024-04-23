@@ -9,8 +9,8 @@ namespace Garage_2_0.Models
         {
         }
 
-        public DbSet<ParkedVehicle> ParkedVehicles { get; set; }
         public DbSet<Garage> Garages { get; set; }
+        public DbSet<ParkedVehicle> ParkedVehicles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
