@@ -90,7 +90,7 @@ namespace Garage_2_0.Controllers
                 return View(viewModel);
             }
 
-            var garage = (await _repository.Find(x => x.Id == viewModel.Id)).Single();
+            var garage = (await _repository.Find(g => g.Id == viewModel.Id)).Single();
             if (garage is null)
             {
                 return NotFound();
