@@ -70,16 +70,8 @@ namespace Garage_2_0.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var garages = await _garageRepository.All();
-
-            var viewModel = new CreateParkedVehicleViewModel
-            {
-                Garages = garages.Select(g => new SelectListItem
-                {
-                    Text = g.Name,
-                    Value = g.Id.ToString()
-                }).ToList()
-            };
+            var viewModel = new CreateParkedVehicleViewModel();
+            viewModel.Garages = await GetGarageSelectOptions();
 
             return View(viewModel);
         }
@@ -103,7 +95,7 @@ namespace Garage_2_0.Controllers
 
                 vehicle.RegisteredAt = DateTime.Now;
 
-                var garage = (await _garageRepository.Find(x => x.Id == viewModel.GarageId)).Single();
+                var garage = (await _garageRepository.Find(g => g.Id == viewModel.GarageId)).Single();
                 if (garage is not null)
                 {
                     vehicle.GarageId = garage.Id;
@@ -118,6 +110,8 @@ namespace Garage_2_0.Controllers
                     Type = AlertType.Success
                 });
             }
+
+            viewModel.Garages = await GetGarageSelectOptions();
             return View(viewModel);
         }
 
@@ -210,6 +204,15 @@ namespace Garage_2_0.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+        private async Task<List<SelectListItem>> GetGarageSelectOptions()
+        {
+            var garages = await _garageRepository.All();
+
+            return garages.Select(g => new SelectListItem
+            {
+                Text = g.Name,
+                Value = g.Id.ToString()
+            }).ToList();
+        }
     }
 }
