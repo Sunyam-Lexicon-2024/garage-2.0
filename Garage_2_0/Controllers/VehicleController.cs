@@ -37,12 +37,12 @@ namespace Garage_2_0.Controllers
 
             if (selectedVehicleType is not null)
             {
-                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType).ToList();
+                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType);
             }
 
             if (!string.IsNullOrEmpty(regNumber))
             {
-                viewModel.ParkedVehicles = [viewModel.ParkedVehicles.FirstOrDefault(v => v.RegistrationNumber == regNumber)!];
+                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
             }
             
             if (alert is not null)
@@ -163,30 +163,31 @@ namespace Garage_2_0.Controllers
         [HttpGet]
         public async Task<IActionResult> Checkout(int id)
         {
-            var vehicle = (await _vehicleRepository.Find(x => x.Id == id)).Single();
-            if (vehicle is null)
+            var removedVehicle = await _vehicleRepository.Delete(id);
+
+            if (removedVehicle is not null)
             {
-                return NotFound();
+                var viewModel = new CheckoutVehicleViewModel
+                {
+                    CheckoutAt = DateTime.Now,
+                    Vehicle = new ParkedVehicleSlimViewModel
+                    {
+                        Id = removedVehicle.Id,
+                        RegisteredAt = removedVehicle.RegisteredAt,
+                        RegistrationNumber = removedVehicle.RegistrationNumber,
+                        Brand = removedVehicle.Brand,
+                        Color = removedVehicle.Color,
+                        Type = removedVehicle.Type,
+                    },
+                    ParkingPeriod = DateTime.Now - removedVehicle.RegisteredAt,
+                    HourlyRate = _hourlyRate,
+                    TotalParkingCost = (DateTime.Now - removedVehicle.RegisteredAt).Hours * _hourlyRate
+                };
+
+                return View(viewModel);
             }
 
-            var viewModel = new CheckoutVehicleViewModel
-            {
-                CheckoutAt = DateTime.Now,
-                Vehicle = new ParkedVehicleSlimViewModel
-                {
-                    Id = vehicle.Id,
-                    RegisteredAt = vehicle.RegisteredAt,
-                    RegistrationNumber = vehicle.RegistrationNumber,
-                    Brand = vehicle.Brand,
-                    Color = vehicle.Color,
-                    Type = vehicle.Type,
-                },
-                ParkingPeriod = DateTime.Now - vehicle.RegisteredAt,
-                HourlyRate = _hourlyRate,
-                TotalParkingCost = (DateTime.Now - vehicle.RegisteredAt).Hours * _hourlyRate
-            };
-
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
