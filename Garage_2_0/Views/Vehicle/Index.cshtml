@@ -17,25 +17,28 @@
     }
 }
 
-<div class="form-control">
-    <form asp-controller="Vehicle" asp-action="Index" method="get">
-        <label asp-for="@Model.SelectedVehicleType">Vehicle Type</label>
-        <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
-            <select asp-for="@Model.SelectedVehicleType" asp-items="@Model.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
-        </div>
-    </form>
-    <form asp-controller="Vehicle" asp-action="Index" method="get">
-        <div class="form-group mt-2">
-            <div class="col-md-2 d-flex">
-                <input class="form-control" asp-for="@Model.RegNumber" placeholder="Enter Vehicle Reg#" />
-                <input type="submit" value="Search" class="btn btn-primary" />
+<div class="row mb-3">
+    <div class="col-sm-4">
+        <div class="card p-2 bg-light">
+            <div class="card-body">
+                <h5 class="mb-3">Filter</h5>
+                <div class="mb-3">
+                    <form asp-controller="Vehicle" asp-action="Index" method="get">
+                        <label asp-for="@Model.SelectedVehicleType">Vehicle type</label>
+                        <select asp-for="@Model.SelectedVehicleType" asp-items="@Model.VehicleTypes" onchange="this.form.submit()" class="form-control"></select>
+                    </form>
+                </div>
+                <form asp-controller="Vehicle" asp-action="Index" method="get">
+                    <label>Search</label>
+                    <input class="form-control" asp-for="@Model.RegNumber" placeholder="Enter registration number..." />
+                    <input type="submit" value="Search" class="btn btn-primary mt-3" />
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
-        <h3 class="mb-3">Vehicles</h3>
         @if (Model.ParkedVehicles is null || Model.ParkedVehicles.Count() is 0)
         {
             <p>No search results</p>
