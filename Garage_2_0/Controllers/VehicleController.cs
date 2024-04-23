@@ -20,35 +20,32 @@ namespace Garage_2_0.Controllers
 
         public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
         {
-            var viewModel = new IndexParkedVehicleViewModel();
-
             var vehicles = await _vehicleRepository.All();
-
-            viewModel.ParkedVehicles = vehicles
-                .Select(v => new ParkedVehicleSlimViewModel
-                {
-                    Id = v.Id,
-                    RegistrationNumber = v.RegistrationNumber,
-                    Type = v.Type,
-                    Brand = v.Brand,
-                    RegisteredAt = v.RegisteredAt,
-                    Color = v.Color,
-                }).ToList();
 
             if (selectedVehicleType is not null)
             {
-                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType);
+                vehicles = vehicles.Where(m => m.Type == selectedVehicleType);
             }
 
             if (!string.IsNullOrEmpty(regNumber))
             {
-                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
+                vehicles = vehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
             }
-            
-            if (alert is not null)
-            {
-                viewModel.Alert = alert;
-            }
+
+            var viewModel = new IndexParkedVehicleViewModel();
+
+            viewModel.ParkedVehicles = vehicles
+                    .Select(v => new ParkedVehicleSlimViewModel
+                    {
+                        Id = v.Id,
+                        RegistrationNumber = v.RegistrationNumber,
+                        Type = v.Type,
+                        Brand = v.Brand,
+                        RegisteredAt = v.RegisteredAt,
+                        Color = v.Color,
+                    }).ToList();
+
+            viewModel.Alert = alert;
 
             return View(viewModel);
         }
