@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace Garage_2_0.Controllers
-{
+{ 
     public class VehicleController(IRepository<ParkedVehicle> repository) : Controller
     {
         private readonly IRepository<ParkedVehicle> _repository = repository;
@@ -62,6 +62,12 @@ namespace Garage_2_0.Controllers
         {
             if (ModelState.IsValid)
             {
+       
+                if (await _repository.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "Registreringsnumret finns redan, vänligen ange ett annat nummer.");
+                    return View(viewModel);
+                }
                 var vehicle = new ParkedVehicle
                 {
                     RegistrationNumber = viewModel.RegistrationNumber,

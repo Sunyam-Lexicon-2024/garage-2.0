@@ -51,6 +51,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |  @using (Html.BeginForm("Delete", "Vehicle", FormMethod.Post, new { id = "deleteForm" }))
+    {
+        @Html.Hidden("id", Model?.Id)
+        <input type="submit"
+               value="Checkout"
+               onclick="return confirm('Are you sure you want to checkout this vehicle?');"
+               class="btn btn-primary mt-2 mb-2" />
+    } | <a asp-action="Index">Back to List</a>
+
 </div>

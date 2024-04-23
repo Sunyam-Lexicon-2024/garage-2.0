@@ -48,7 +48,12 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="Color" class="control-label"></label>
-                        <input asp-for="Color" class="form-control" />
+                        <select asp-for="Color" class="form-control">
+                            @foreach (var color in Enum.GetValues(typeof(Color)))
+                            {
+                                <option value="@color">@color</option>
+                            }
+                        </select> 
                         <span asp-validation-for="Color" class="text-danger"></span>
                     </div>
                     <input type="submit" value="Submit" class="btn btn-primary" />
