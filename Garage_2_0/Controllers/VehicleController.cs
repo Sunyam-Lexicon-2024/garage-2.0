@@ -80,9 +80,10 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateParkedVehicleViewModel viewModel)
         {
+            viewModel.Garages = await GetGarageSelectOptions();
+
             if (ModelState.IsValid)
             {
-       
                 if (await _vehicleRepository.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
                 {
                     ModelState.AddModelError("RegistrationNumber", "Registreringsnumret finns redan, vänligen ange ett annat nummer.");
@@ -117,7 +118,6 @@ namespace Garage_2_0.Controllers
                 });
             }
 
-            viewModel.Garages = await GetGarageSelectOptions();
             return View(viewModel);
         }
 
