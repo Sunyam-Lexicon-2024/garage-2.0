@@ -15,9 +15,22 @@
     <li>Cost per hour: @Model.HourlyRate SEK</li>
     <li>Total parking cost: @Model.TotalParkingCost SEK</li>
 </ul>
-<div class="my-3">
+<div class="my-3 d-flex flex-row">
+    <form asp-controller="Vehicle" asp-action="DownloadCheckoutReceipt" method="post">
+        <input type="hidden" asp-for="@Model.HourlyRate" />
+        <input type="hidden" asp-for="@Model.TotalParkingCost" />
+        <input type="hidden" asp-for="@Model.CheckoutAt" />
+        <input type="hidden" asp-for="@Model.ParkingPeriod" />
+        <input type="hidden" asp-for="@Model.Vehicle.Id" />
+        <input type="hidden" asp-for="@Model.Vehicle.RegistrationNumber" />
+        <input type="hidden" asp-for="@Model.Vehicle.Type" />
+        <input type="hidden" asp-for="@Model.Vehicle.Brand" />
+        <input type="hidden" asp-for="@Model.Vehicle.RegisteredAt" />
+        <input type="hidden" asp-for="@Model.Vehicle.Color" />
+        <input type="Submit" value="Download Receipt" class="btn btn-primary me-2" />
+    </form>
     <form asp-controller="Vehicle" asp-action="Delete" asp-route-id="@Model.Vehicle.Id" method="post">
-        <button type="submit" class="btn btn-danger">Confirm</button>
+        <button type="submit" class="btn btn-danger">Confirm Checkout</button>
     </form>
 </div>
 <a asp-controller="Vehicle" asp-action="Index" class="mt-3">Back to vehicles</a>

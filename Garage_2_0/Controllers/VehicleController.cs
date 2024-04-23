@@ -5,7 +5,7 @@ using Garage_2_0.Models.ViewModels.Vehicle;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+using System.Text.Json;
 
 namespace Garage_2_0.Controllers
 {
@@ -187,6 +187,21 @@ namespace Garage_2_0.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DownloadCheckoutReceipt(CheckoutVehicleViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            string json = JsonSerializer.Serialize(viewModel);
+            System.IO.File.WriteAllText(@"C:\", json);
+
+            return View();
         }
 
         [HttpPost, ActionName("Delete")]
