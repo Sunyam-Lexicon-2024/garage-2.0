@@ -1,5 +1,5 @@
 ﻿using Garage_2_0.Models;
-using Garage_2_0.Models.ViewModels;
+using Garage_2_0.Models.ViewModels.Garage;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -101,33 +101,24 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,MaxCapacity")] Garage garage)
+        public async Task<IActionResult> Edit(CreateOrEditGarageViewModel viewModel)
         {
-            if (id != garage.Id)
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var garage = (await _repository.Find(g => g.Id == viewModel.Id)).Single();
+            if (garage is null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _repository.Update(garage);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await GarageExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(garage);
+            garage.Name = viewModel.Name;
+            garage.MaxCapacity = viewModel.MaxCapacity;
+
+            await _repository.Update(garage);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost, ActionName("Delete")]

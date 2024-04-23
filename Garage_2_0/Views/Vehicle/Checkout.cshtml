@@ -1,0 +1,18 @@
+﻿@model CheckoutVehicleViewModel
+
+@{
+    Layout = "_CheckoutLayout";
+}
+
+<h3>Checkout Vehicle - @Model.Vehicle.RegistrationNumber</h3>
+<ul class="list-group list-group-flush my-3">
+    <li class="list-group-item"><strong>Parked at:</strong> @Model.Vehicle.RegisteredAt</li>
+    <li class="list-group-item"><strong>Checkout at:</strong> @Model.CheckoutAt</li>
+    <li class="list-group-item"><strong>Parking period:</strong> @Model.ParkingPeriod.Hours hours</li>
+    <li class="list-group-item"><strong>Registration number:</strong> @Model.Vehicle.RegistrationNumber</li>
+    <li class="list-group-item"><strong>Vehicle:</strong> @Model.Vehicle.Type</li>
+    <li class="list-group-item"><strong>Brand:</strong> @Model.Vehicle.Brand</li>
+    <li class="list-group-item"><strong>Cost per hour:</strong> @Model.HourlyRate SEK</li>
+    <li class="list-group-item"><strong>Total parking cost:</strong> @Model.TotalParkingCost SEK</li>
+</ul>
+<a asp-controller="Vehicle" asp-action="Index" class="mt-3">Back to vehicles</a>
