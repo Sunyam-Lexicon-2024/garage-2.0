@@ -1,6 +1,6 @@
 ﻿using Garage_2_0.Models.Enums;
 
-namespace Garage_2_0.Models.ViewModels
+namespace Garage_2_0.Models.ViewModels.Common
 {
     public class AlertViewModel
     {

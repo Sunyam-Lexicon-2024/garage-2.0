@@ -38,7 +38,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
 
     public async Task<Garage?> Delete(int id)
     {
-        var garageToDelete = await _context.Garages.FirstOrDefaultAsync(g => g.ID == id);
+        var garageToDelete = await _context.Garages.FirstOrDefaultAsync(g => g.Id == id);
         if (garageToDelete != null)
         {
             var deletedGarage = _context.Garages.Remove(garageToDelete).Entity;

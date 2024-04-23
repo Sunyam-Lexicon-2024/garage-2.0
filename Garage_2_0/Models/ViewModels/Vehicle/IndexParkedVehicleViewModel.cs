@@ -1,7 +1,8 @@
 ﻿using Garage_2_0.Models.Enums;
+using Garage_2_0.Models.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Garage_2_0.Models.ViewModels
+namespace Garage_2_0.Models.ViewModels.Vehicle
 {
     public class IndexParkedVehicleViewModel
     {

@@ -1,17 +1,20 @@
 using Garage_2_0.Models;
 using Garage_2_0.Models.Enums;
-using Garage_2_0.Models.ViewModels;
+using Garage_2_0.Models.ViewModels.Common;
+using Garage_2_0.Models.ViewModels.Vehicle;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+using System.Text.Json;
 
 namespace Garage_2_0.Controllers
 {
     public class VehicleController(
+        IConfiguration configuration,
         IRepository<Garage> garageRepository,
         IRepository<ParkedVehicle> vehicleRepository) : Controller
     {
+        private readonly int _hourlyRate = configuration.GetValue<int>("GarageSettings:HourlyRate");
         private readonly IRepository<Garage> _garageRepository = garageRepository;
         private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
 
@@ -22,7 +25,6 @@ namespace Garage_2_0.Controllers
             var vehicles = await _vehicleRepository.All();
 
             viewModel.ParkedVehicles = vehicles
-                .OrderByDescending(v => v.RegisteredAt)
                 .Select(v => new ParkedVehicleSlimViewModel
                 {
                     Id = v.Id,
@@ -35,12 +37,12 @@ namespace Garage_2_0.Controllers
 
             if (selectedVehicleType is not null)
             {
-                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType).ToList();
+                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.Type == selectedVehicleType);
             }
 
             if (!string.IsNullOrEmpty(regNumber))
             {
-                viewModel.ParkedVehicles = [viewModel.ParkedVehicles.FirstOrDefault(v => v.RegistrationNumber == regNumber)!];
+                viewModel.ParkedVehicles = viewModel.ParkedVehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
             }
             
             if (alert is not null)
@@ -78,7 +80,7 @@ namespace Garage_2_0.Controllers
                 Garages = garages.Select(g => new SelectListItem
                 {
                     Text = g.Name,
-                    Value = g.ID.ToString()
+                    Value = g.Id.ToString()
                 }).ToList()
             };
 
@@ -104,10 +106,10 @@ namespace Garage_2_0.Controllers
 
                 vehicle.RegisteredAt = DateTime.Now;
 
-                var garage = (await _garageRepository.Find(x => x.ID == viewModel.GarageId)).Single();
+                var garage = (await _garageRepository.Find(x => x.Id == viewModel.GarageId)).Single();
                 if (garage is not null)
                 {
-                    vehicle.GarageId = garage.ID;
+                    vehicle.GarageId = garage.Id;
                 }
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
@@ -156,6 +158,51 @@ namespace Garage_2_0.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Checkout(int id)
+        {
+            var removedVehicle = await _vehicleRepository.Delete(id);
+
+            if (removedVehicle is not null)
+            {
+                var viewModel = new CheckoutVehicleViewModel
+                {
+                    CheckoutAt = DateTime.Now,
+                    Vehicle = new ParkedVehicleSlimViewModel
+                    {
+                        Id = removedVehicle.Id,
+                        RegisteredAt = removedVehicle.RegisteredAt,
+                        RegistrationNumber = removedVehicle.RegistrationNumber,
+                        Brand = removedVehicle.Brand,
+                        Color = removedVehicle.Color,
+                        Type = removedVehicle.Type,
+                    },
+                    ParkingPeriod = DateTime.Now - removedVehicle.RegisteredAt,
+                    HourlyRate = _hourlyRate,
+                    TotalParkingCost = (DateTime.Now - removedVehicle.RegisteredAt).Hours * _hourlyRate
+                };
+
+                return View(viewModel);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DownloadCheckoutReceipt(CheckoutVehicleViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            string json = JsonSerializer.Serialize(viewModel);
+            System.IO.File.WriteAllText(@"C:\", json);
+
+            return View();
         }
 
         [HttpPost, ActionName("Delete")]

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 
-namespace Garage_2_0.Models.ViewModels
+namespace Garage_2_0.Models.ViewModels.Vehicle
 {
     public class CreateParkedVehicleViewModel
     {
