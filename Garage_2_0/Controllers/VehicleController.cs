@@ -82,6 +82,12 @@ namespace Garage_2_0.Controllers
         {
             if (ModelState.IsValid)
             {
+       
+                if (await _vehicleRepository.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
+                {
+                    ModelState.AddModelError("RegistrationNumber", "Registreringsnumret finns redan, vänligen ange ett annat nummer.");
+                    return View(viewModel);
+                }
                 var vehicle = new ParkedVehicle
                 {
                     RegistrationNumber = viewModel.RegistrationNumber!,
