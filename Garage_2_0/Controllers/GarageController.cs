@@ -17,7 +17,7 @@ namespace Garage_2_0.Controllers
 
             var model = garages.Select(g => new GarageViewModel
             {
-                Id = g.ID,
+                Id = g.Id,
                 Name = g.Name,
                 MaxCapacity = g.MaxCapacity
             });
@@ -32,7 +32,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = (await _repository.Find(g => g.ID == id)).Single();
+            var garage = (await _repository.Find(g => g.Id == id)).Single();
 
             if (garage == null)
             {
@@ -41,7 +41,7 @@ namespace Garage_2_0.Controllers
 
             GarageViewModel garageViewModel = new()
             {
-                Id = garage.ID,
+                Id = garage.Id,
                 Name = garage.Name,
                 MaxCapacity = garage.MaxCapacity
             };
@@ -71,7 +71,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = (await _repository.Find(g => g.ID == id)).Single();
+            var garage = (await _repository.Find(g => g.Id == id)).Single();
 
             if (garage == null)
             {
@@ -85,7 +85,7 @@ namespace Garage_2_0.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,MaxCapacity")] Garage garage)
         {
-            if (id != garage.ID)
+            if (id != garage.Id)
             {
                 return NotFound();
             }
@@ -126,7 +126,7 @@ namespace Garage_2_0.Controllers
 
         private async Task<bool> GarageExists(int id)
         {
-            return await _repository.Any(g => g.ID == id);
+            return await _repository.Any(g => g.Id == id);
         }
     }
 }
