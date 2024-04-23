@@ -98,7 +98,7 @@ namespace Garage_2_0.Controllers
 
                 vehicle.RegisteredAt = DateTime.Now;
 
-                var garage = (await _garageRepository.Find(x => x.Id == viewModel.GarageId)).Single();
+                var garage = (await _garageRepository.Find(g => g.Id == viewModel.GarageId)).Single();
                 if (garage is not null)
                 {
                     vehicle.GarageId = garage.Id;
@@ -211,10 +211,10 @@ namespace Garage_2_0.Controllers
         {
             var garages = await _garageRepository.All();
 
-            return garages.Select(x => new SelectListItem
+            return garages.Select(g => new SelectListItem
             {
-                Text = x.Name,
-                Value = x.Id.ToString()
+                Text = g.Name,
+                Value = g.Id.ToString()
             }).ToList();
         }
     }
