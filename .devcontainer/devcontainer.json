@@ -1,13 +1,9 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
 	"name": "Garage 2.0",
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
-	"runArgs": [
-		"--env-file",
-		".env"
-	],
-	"postCreateCommand": "dotnet tool install --global dotnet-ef",
+	"dockerComposeFile": "docker-compose.yaml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
 	"containerEnv": {
 		"HOME": "/home/vscode"
 	},
