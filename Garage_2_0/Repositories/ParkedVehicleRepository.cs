@@ -13,13 +13,13 @@ namespace Garage_2_0.Repositories
             return vehicles;
         }
 
-        public async Task<bool> Any(Func<ParkedVehicle, bool> predicate)
+        public async Task<bool> Any(Expression<Func<ParkedVehicle, bool>> predicate)
         {
             bool any = await Task.Run(() => { return _context.ParkedVehicles.Any(predicate); });
             return any;
         }
 
-        public async Task<IEnumerable<ParkedVehicle>> Find(Func<ParkedVehicle, bool> predicate)
+        public async Task<IEnumerable<ParkedVehicle>> Find(Expression<Func<ParkedVehicle, bool>> predicate)
         {
             var vehicles = await Task.Run(() =>
             {

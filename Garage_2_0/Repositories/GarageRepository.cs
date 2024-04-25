@@ -14,13 +14,13 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return garages;
     }
 
-    public async Task<bool> Any(Func<Garage, bool> predicate)
+    public async Task<bool> Any(Expression<Func<Garage, bool>> predicate)
     {
         bool any = await Task.Run(() => { return _context.Garages.Any(predicate); });
         return any;
     }
 
-    public async Task<IEnumerable<Garage>> Find(Func<Garage, bool> predicate)
+    public async Task<IEnumerable<Garage>> Find(Expression<Func<Garage, bool>> predicate)
     {
         var garages = await Task.Run(() =>
         {
