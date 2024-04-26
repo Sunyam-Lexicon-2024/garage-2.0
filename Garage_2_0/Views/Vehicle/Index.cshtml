@@ -33,8 +33,6 @@
         </div>
     </form>
 </div>
-<div class="row">
-    <div class="col-sm-6">
         <h3 class="mb-3">Vehicles</h3>
         @if (Model.ParkedVehicles is null || Model.ParkedVehicles.Count() is 0)
         {
@@ -42,7 +40,7 @@
         }
         else
         {
-            <table class="table table-bordered">
+            <table class="table" id="vehicle-table">
                 <thead class="table-light">
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().RegistrationNumber)</th>
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Type)</th>
@@ -72,5 +70,14 @@
                 </tbody>
             </table>
         }
-    </div>
-</div>
+
+@section Scripts {
+    <script>
+       let table = new DataTable('#vehicle-table',
+        {
+            columnDefs: [{ searchable: false, targets: [1,3,4,5,6] }],
+            responsive: true
+        });
+        
+    </script>
+}
