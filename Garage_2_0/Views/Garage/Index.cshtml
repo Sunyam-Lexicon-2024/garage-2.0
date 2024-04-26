@@ -4,11 +4,10 @@
     ViewBag.Title = "Garages";
 }
 
-<div class="row">
-    <div class="col-sm-6">
+
         <h3 class="mb-3">Garages</h3>
         <a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
-        <table class="table table-bordered">
+        <table id="garage-table" class="table table-striped hover cell-border display compact">
             <thead class="table-light">
             <th>@Html.DisplayNameFor(g => g.Id)</th>
             <th>@Html.DisplayNameFor(g => g.Name)</th>
@@ -29,5 +28,66 @@
                 }
             </tbody>
         </table>
-    </div>
-</div>
+
+        @section Scripts {
+    <script>
+       let table = new DataTable("#garage-table",
+        {
+            dom: '<"top"i>rt<"bottom-wrapper"<"bottom-left"l><"bottom-right"p>><"clear">',
+            columns: [
+                { data : "Id"},
+                { data : "Name"},
+                { data : "Maxcapacity"},
+                { data : "Details"},
+            ],
+            responsive: true,
+            columnDefs: 
+            [
+            { orderable: false, targets: 3} 
+            ],
+            responsive: true,
+            initComplete: function () {
+                this.api()
+                .columns([0,1,2])
+                .every(function () {
+                    let column = this;
+                    let input = document.createElement("input");
+                    input.placeholder = "Search";
+                    column.header().appendChild(input);
+
+                    column.header().style.textAlign = "start";
+                    input.style.display = "flex";
+                    input.style.flexFlow = "column";
+
+                    input.addEventListener("keyup", () => {
+                        if (column.search() !== this.value) {
+                            column.search(input.value).draw();
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}
+
+
+@section Styles {
+<style>
+    #garage-table_wrapper  {
+        label {
+            margin-left: 0.5rem;
+        }
+        .bottom-wrapper {
+            display: grid;
+            width: 100%;
+            justify-content: stretch;
+            grid-auto-flow: column;
+        .bottom-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+        }
+        
+    }
+</style>
+}

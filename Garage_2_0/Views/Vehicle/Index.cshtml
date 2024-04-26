@@ -75,10 +75,33 @@
 
 @section Scripts {
     <script>
-       let table = new DataTable('#vehicle-table',
+       let table = new DataTable("#vehicle-table",
         {
+            dom: '<"top"i>rt<"bottom-wrapper"<"bottom-left"l><"bottom-right"p>><"clear">',
+            columns: [
+                { data : "RegistrationNumber"},
+                { data : "Type"},
+                { data : "Brand"},
+                { data : "RegisteredAt"},
+                { 
+                    
+                    data: "color",
+                    render: function(data, type) {
+                        let color = "black";
+                        if(type == "display") {
+                            if(data == "Yellow") {
+                                color = "rgb(245, 170, 0)";
+                            }else {
+                                color = data;
+                            }
+                        }
+                        return `<span style="color:${color}">${data}</span>`;
+                    }
+                },
+                { data : "Edit"},
+                { data : "Details"},
+            ],
             responsive: true,
-            searching: false,
             columnDefs: 
             [
             { orderable: false, targets: [5,6]} 
@@ -89,17 +112,14 @@
                 .columns([0,1,2,3,4])
                 .every(function () {
                     let column = this;
-                    let title = column.header().textContent;
-    
-
-                    let input = document.createElement('input');
-                    input.placeholder = "search";
+                    let input = document.createElement("input");
+                    input.placeholder = "Search";
                     column.header().appendChild(input);
 
                     input.style.display = "flex";
                     input.style.flexFlow = "column";
 
-                    input.addEventListener('keyup', () => {
+                    input.addEventListener("keyup", () => {
                         if (column.search() !== this.value) {
                             column.search(input.value).draw();
                         }
@@ -118,6 +138,17 @@
         label {
             margin-left: 0.5rem;
         }
+        .bottom-wrapper {
+            display: grid;
+            width: 100%;
+            justify-content: stretch;
+            grid-auto-flow: column;
+        .bottom-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+        }
+        
     }
 </style>
 }
