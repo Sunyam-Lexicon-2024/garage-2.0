@@ -1,4 +1,4 @@
-﻿@model VehicleIndexViewModel
+@model VehicleIndexViewModel
 
 @{
     ViewBag.Title = "Vehicles";
@@ -17,7 +17,7 @@
     }
 }
 
-<div class="form-control">
+<div class="form-control mb-3">
     <form asp-controller="Vehicle" asp-action="Index" method="get">
         <label asp-for="@Model.SelectedVehicleType">Vehicle Type</label>
         <div class="col-md-2 form-group d-flex flex-column justify-content-center align-items-center">
@@ -25,24 +25,24 @@
         </div>
     </form>
     <form asp-controller="Vehicle" asp-action="Index" method="get">
-        <div class="form-group mt-2">
-            <div class="col-md-2 d-flex">
+        <div class="form-group mt-2 d-flex">
+            <div class=" d-flex">
                 <input class="form-control" asp-for="@Model.RegNumber" placeholder="Enter Vehicle Reg#" />
-                <input type="submit" value="Search" class="btn btn-primary" />
+                <div class="px-2">
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                </div>
             </div>
         </div>
     </form>
 </div>
-<div class="row">
-    <div class="col-sm-6">
-        <h3 class="mb-3">Vehicles</h3>
+        <h3 class="mb-3">@ViewBag.Title</h3>
         @if (!Model.ParkedVehicles.Any())
         {
             <p>No search results</p>
         }
         else
         {
-            <table class="table table-bordered">
+            <table class="table table-striped hover cell-border display compact" id="vehicle-table">
                 <thead class="table-light">
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().RegistrationNumber)</th>
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Type)</th>
@@ -50,8 +50,8 @@
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().RegisteredAt)</th>
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().Color)</th>
                     <th>@Html.DisplayNameFor(model => model.ParkedVehicles.First().ParkingSpotIds)</th>
-                    <th>Details</th>
-                    <th>Checkout</th>
+                    <th></th>
+                    <th></th>
                 </thead>
                 <tbody>
                     @foreach (var vehicle in Model.ParkedVehicles)
@@ -74,5 +74,83 @@
                 </tbody>
             </table>
         }
-    </div>
-</div>
+
+@section Scripts {
+    <script>
+       let table = new DataTable("#vehicle-table",
+        {
+            dom: '<"top"i>rt<"bottom-wrapper"<"bottom-left"l><"bottom-right"p>><"clear">', // https://datatables.net/reference/option/dom
+            columns: [
+                { data : "RegistrationNumber"},
+                { data : "Type"},
+                { data : "Brand"},
+                { data : "RegisteredAt"},
+                { 
+                    data: "color",
+                    render: function(data, type) {
+                        let color = "black";
+                        if(type == "display") {
+                            if(data == "Yellow") {
+                                color = "rgb(245, 170, 0)";
+                            }else {
+                                color = data;
+                            }
+                        }
+                        return `<span style="color:${color}">${data}</span>`;
+                    }
+                },
+                { data : "ParkingSpotIds"},
+                { data : "Edit"},
+                { data : "Details"},
+            ],
+            responsive: true,
+            columnDefs: 
+            [
+            { orderable: false, targets: [6,7]} 
+            ],
+            responsive: true,
+            initComplete: function () {
+                this.api()
+                .columns([0,1,2,3,4,5])
+                .every(function () {
+                    let column = this;
+                    let input = document.createElement("input");
+                    input.placeholder = "Search";
+                    column.header().appendChild(input);
+
+                    column.header().style.textAlign = "start";
+                    input.style.display = "flex";
+                    input.style.flexFlow = "column";
+
+                    input.addEventListener("keyup", () => {
+                        if (column.search() !== this.value) {
+                            column.search(input.value).draw();
+                        }
+                    });
+                });
+            }
+        });
+        
+    </script>
+}
+
+@section Styles {
+<style>
+    #vehicle-table_wrapper  {
+        label {
+            margin-left: 0.5rem;
+        }
+        .bottom-wrapper {
+            display: grid;
+            width: 100%;
+            justify-content: stretch;
+            grid-auto-flow: column;
+        .bottom-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+        }
+        
+    }
+</style>
+}

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Garage_2_0.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +14,13 @@ namespace Garage_2_0.Repositories
             return vehicles;
         }
 
-        public async Task<bool> Any(Func<Vehicle, bool> predicate)
+        public async Task<bool> Any(Expression<Func<Vehicle, bool>> predicate)
         {
             bool any = await Task.Run(() => { return _context.Vehicles.Any(predicate); });
             return any;
         }
 
-        public async Task<IEnumerable<Vehicle>> Find(Func<Vehicle, bool> predicate)
+        public async Task<IEnumerable<Vehicle>> Find(Expression<Func<Vehicle, bool>> predicate)
         {
             var vehicles = await Task.Run(() =>
             {

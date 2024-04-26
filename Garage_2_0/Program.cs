@@ -2,7 +2,10 @@ using Garage_2_0.Models;
 using Garage_2_0.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions {
+    Args = args,
+    ApplicationName = typeof(Program).Assembly.FullName
+});
 
 IConfiguration configuration = builder.Configuration;
 IServiceCollection services = builder.Services;

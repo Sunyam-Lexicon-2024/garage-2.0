@@ -1,4 +1,5 @@
 using Garage_2_0.Models;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2_0.Repositories;
@@ -14,13 +15,13 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return garages;
     }
 
-    public async Task<bool> Any(Func<Garage, bool> predicate)
+    public async Task<bool> Any(Expression<Func<Garage, bool>> predicate)
     {
         bool any = await Task.Run(() => { return _context.Garages.Any(predicate); });
         return any;
     }
 
-    public async Task<IEnumerable<Garage>> Find(Func<Garage, bool> predicate)
+    public async Task<IEnumerable<Garage>> Find(Expression<Func<Garage, bool>> predicate)
     {
         var garages = await Task.Run(() =>
         {
@@ -54,6 +55,7 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         await _context.SaveChangesAsync();
         return updatedGarage;
     }
+
     public IQueryable<Garage> GetManyToManyRelation(int id)
     {
         return from garage in _context.Garages

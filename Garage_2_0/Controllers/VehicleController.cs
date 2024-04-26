@@ -210,27 +210,40 @@ namespace Garage_2_0.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout(int id)
+        public async Task<IActionResult> Checkout(int? id)
         {
-            var removedVehicle = await _vehicleRepository.Delete(id);
 
-            if (removedVehicle is not null)
+            if (id is null)
             {
+                _logger.LogError("{Message}", $"garage with ID [{id}] not found");
+                return NotFound();
+            }
+
+            var relatedSpots = _parkingSpotRepository.GetManyToManyRelation((int)id).ToList();
+            var vehicleToDelete = await _vehicleRepository.Delete((int)id);
+
+            if (vehicleToDelete is not null)
+            {
+                foreach (var relatedSpot in relatedSpots)
+                {
+                    relatedSpot.ContainsVehicleType = null;
+                    await _parkingSpotRepository.Update(relatedSpot);
+                }
                 var viewModel = new CheckoutVehicleViewModel
                 {
                     CheckoutAt = DateTime.Now,
                     Vehicle = new VehicleSlimViewModel
                     {
-                        Id = removedVehicle.Id,
-                        RegisteredAt = removedVehicle.RegisteredAt,
-                        RegistrationNumber = removedVehicle.RegistrationNumber,
-                        Brand = removedVehicle.Brand,
-                        Color = removedVehicle.Color,
-                        Type = removedVehicle.Type,
+                        Id = vehicleToDelete.Id,
+                        RegisteredAt = vehicleToDelete.RegisteredAt,
+                        RegistrationNumber = vehicleToDelete.RegistrationNumber,
+                        Brand = vehicleToDelete.Brand,
+                        Color = vehicleToDelete.Color,
+                        Type = vehicleToDelete.Type,
                     },
-                    ParkingPeriod = DateTime.Now - removedVehicle.RegisteredAt,
+                    ParkingPeriod = DateTime.Now - vehicleToDelete.RegisteredAt,
                     HourlyRate = _hourlyRate,
-                    TotalParkingCost = (DateTime.Now - removedVehicle.RegisteredAt).Hours * _hourlyRate
+                    TotalParkingCost = (DateTime.Now - vehicleToDelete.RegisteredAt).Hours * _hourlyRate
                 };
 
                 return View(viewModel);
@@ -238,29 +251,7 @@ namespace Garage_2_0.Controllers
 
             return View();
         }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
-        {
-            if (id is null)
-            {
-                _logger.LogError("{Message}", $"garage with ID [{id}] not found");
-                return NotFound();
-            }
-            else
-            {
-                var relatedSpots = _parkingSpotRepository.GetManyToManyRelation((int)id).ToList();
-                var vehicleToDelete = await _vehicleRepository.Delete((int)id);
-                foreach (var relatedSpot in relatedSpots)
-                {
-                    relatedSpot.ContainsVehicleType = null;
-                    await _parkingSpotRepository.Update(relatedSpot);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
+        
         private static string AssembleSpotIdString(ICollection<ParkingSpot> spots)
         {
             return string.Join(", ", spots.Select(s => s.Id).ToArray());

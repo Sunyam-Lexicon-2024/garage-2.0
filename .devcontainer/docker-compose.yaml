@@ -2,8 +2,8 @@ services:
   app:
     image: "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm"
     command: "tail -f /dev/null"
-    env_file:
-      - ../.env
+    environment:
+      - DOTNET_ENVIROMENT=DevContainers
     volumes:
       - ..:/workspace
     networks:

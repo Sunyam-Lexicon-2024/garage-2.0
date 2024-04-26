@@ -1,5 +1,11 @@
 # Garage 2.0
 
+## Index
+- [Description](#description)
+- [Data Structure](#data-structure)
+- [Testing/Development](#testingdevelopment)
+- [Contact](#contact)
+
 ## Description
 An MVC (Model View Controller) application to handle the registration/deregistration of Vehicles in select Garages
 
@@ -13,7 +19,7 @@ An MVC (Model View Controller) application to handle the registration/deregistra
  Alternatively, use your *nix enviromnet of choice and follow the below instructions.
 
 ```
-# *nix terminal
+# Bash example
 # Requires .NET SDK 8.x as well as dotnet-ef tools to be available 
 
 cd Storage
