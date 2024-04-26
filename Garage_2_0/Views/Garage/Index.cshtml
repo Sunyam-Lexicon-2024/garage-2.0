@@ -3,9 +3,7 @@
 @{
     ViewBag.Title = "Garages";
 }
-
-
-        <h3 class="mb-3">Garages</h3>
+        <h3 class="mb-3">@ViewBag.Title</h3>
         <a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
         <table id="garage-table" class="table table-striped hover cell-border display compact">
             <thead class="table-light">
@@ -87,7 +85,6 @@
             justify-content: flex-end;
         }
         }
-        
     }
 </style>
 }
