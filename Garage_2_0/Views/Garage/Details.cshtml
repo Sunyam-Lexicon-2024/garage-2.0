@@ -4,21 +4,15 @@
     ViewBag.Title = $"{Model.Name}";
 }
 
-<div>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxCapacity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxCapacity)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-2 bg-light">
+            <div class="card-body">
+                <h3>@Model.Name</h3>
+                <p>Max capacity: @Model.MaxCapacity</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 @using (Html.BeginForm("Delete", "Garage", FormMethod.Post, new { id = "deleteForm" }))

@@ -1,0 +1,30 @@
+services: 
+  app:
+    image: "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm"
+    command: "tail -f /dev/null"
+    environment:
+      - DOTNET_ENVIROMENT=DevContainers
+    volumes:
+      - ..:/workspace
+    networks:
+      - garage-3-network
+
+  database: 
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sql_server2022
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=N&DevelopmentPassword
+    networks:
+      - garage-3-network
+
+  redis:
+    image: "docker.io/library/redis:7.2.4-alpine"
+    container_name: redis
+    networks:
+      - garage-3-network
+
+networks:
+  garage-3-network:
+    driver: bridge
+

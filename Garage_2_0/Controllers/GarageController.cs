@@ -1,5 +1,5 @@
 ﻿using Garage_2_0.Models;
-using Garage_2_0.Models.ViewModels;
+using Garage_2_0.Models.ViewModels.Garage;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace Garage_2_0.Controllers
 
             var model = garages.Select(g => new GarageViewModel
             {
-                Id = g.ID,
+                Id = g.Id,
                 Name = g.Name,
                 MaxCapacity = g.MaxCapacity
             });
@@ -32,7 +32,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = (await _repository.Find(g => g.ID == id)).Single();
+            var garage = (await _repository.Find(g => g.Id == id)).Single();
 
             if (garage == null)
             {
@@ -41,7 +41,7 @@ namespace Garage_2_0.Controllers
 
             GarageViewModel garageViewModel = new()
             {
-                Id = garage.ID,
+                Id = garage.Id,
                 Name = garage.Name,
                 MaxCapacity = garage.MaxCapacity
             };
@@ -71,7 +71,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            var garage = (await _repository.Find(g => g.ID == id)).Single();
+            var garage = (await _repository.Find(g => g.Id == id)).Single();
 
             if (garage == null)
             {
@@ -83,33 +83,24 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,MaxCapacity")] Garage garage)
+        public async Task<IActionResult> Edit(CreateOrEditGarageViewModel viewModel)
         {
-            if (id != garage.ID)
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+            var garage = (await _repository.Find(g => g.Id == viewModel.Id)).Single();
+            if (garage is null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _repository.Update(garage);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await GarageExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(garage);
+            garage.Name = viewModel.Name;
+            garage.MaxCapacity = viewModel.MaxCapacity;
+
+            await _repository.Update(garage);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -126,7 +117,7 @@ namespace Garage_2_0.Controllers
 
         private async Task<bool> GarageExists(int id)
         {
-            return await _repository.Any(g => g.ID == id);
+            return await _repository.Any(g => g.Id == id);
         }
     }
 }
