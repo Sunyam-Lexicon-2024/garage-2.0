@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Garage_2_0.Repositories;
 
 public interface IRepository<T> where T : class
