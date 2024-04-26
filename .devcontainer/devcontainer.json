@@ -1,6 +1,6 @@
 {
 	"name": "Garage 2.0",
-	"dockerComposeFile": "docker-compose.yaml",
+	"dockerComposeFile": "../development.docker-compose.yaml",
 	"service": "app",
 	"workspaceFolder": "/workspace",
 	"shutdownAction": "stopCompose",

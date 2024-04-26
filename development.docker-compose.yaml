@@ -1,0 +1,30 @@
+services:
+
+  api:
+    container_name: garage-2-api
+    build:
+      dockerfile: Dockerfile
+      target: development
+    user: vscode
+    ports: 
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - .:/workspace
+    entrypoint: [ "/usr/local/bin/entrypoint.sh" ]
+    command: [ "tail", "-f", "/dev/null" ]
+    networks:
+      - development
+
+  database: 
+    container_name: garage-2-db
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=N&DevelopmentPassword
+    networks:
+      - development
+
+networks:
+  development:
+    driver: bridge
