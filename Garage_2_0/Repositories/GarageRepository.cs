@@ -56,5 +56,10 @@ public class GarageRepository(GarageDbContext context) : IRepository<Garage>
         return updatedGarage;
     }
 
- 
+    public IQueryable<Garage> GetManyToManyRelation(int id)
+    {
+        return from garage in _context.Garages
+               where garage.Id == id
+               select garage;
+    }
 }

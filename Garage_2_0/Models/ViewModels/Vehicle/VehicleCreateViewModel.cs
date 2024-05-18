@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Garage_2_0.Models.ViewModels.Vehicle
 {
-    public class CreateParkedVehicleViewModel
+    public class VehicleCreateViewModel
     {
         public int Id { get; set; }
         [Required]

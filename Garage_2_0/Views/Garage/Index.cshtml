@@ -3,14 +3,34 @@
 @{
     ViewBag.Title = "Garages";
 }
+
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
         <h3 class="mb-3">@ViewBag.Title</h3>
         <a class="btn btn-primary mb-3" asp-controller="Garage" asp-action="Create">New</a>
         <table id="garage-table" class="table table-striped hover cell-border display compact">
             <thead class="table-light">
             <th>@Html.DisplayNameFor(g => g.Id)</th>
             <th>@Html.DisplayNameFor(g => g.Name)</th>
-            <th>@Html.DisplayNameFor(g => g.MaxCapacity)</th>
-            <th>Details</th>
+            <th>@Html.DisplayNameFor(g => g.ParkingSpotCount)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var garage in Model)
+        {
+            <tr>
+                <th scope="row">@garage.Id</th>
+                <td>@garage.Name</td>
+                <td>@garage.ParkingSpotCount</td>
+                <td>
+                    <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
             </thead>
             <tbody>
                 @foreach (var garage in Model)
@@ -18,7 +38,7 @@
                     <tr>
                         <th scope="row">@garage.Id</th>
                         <td>@garage.Name</td>
-                        <td>@garage.MaxCapacity</td>
+                        <td>@garage.ParkingSpotCount</td>
                         <td>
                             <a asp-controller="Garage" asp-action="Details" asp-route-id="@garage.Id">Details</a>
                         </td>
@@ -27,7 +47,7 @@
             </tbody>
         </table>
 
-        @section Scripts {
+@section Scripts {
     <script>
        let table = new DataTable("#garage-table",
         {
@@ -35,7 +55,7 @@
             columns: [
                 { data : "Id"},
                 { data : "Name"},
-                { data : "Maxcapacity"},
+                { data : "ParkingSpotCount"},
                 { data : "Details"},
             ],
             responsive: true,
@@ -67,7 +87,6 @@
         });
     </script>
 }
-
 
 @section Styles {
 <style>

@@ -12,6 +12,6 @@ namespace Garage_2_0.Models.ViewModels.Garage
 
         [Required]
         [Range(0, 500)]
-        public int MaxCapacity { get; set; }
+        public int ParkingSpotCount { get; set; }
     }
 }

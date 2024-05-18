@@ -1,22 +1,27 @@
 using Garage_2_0.Models;
+using Garage_2_0.Models.Configurations;
 using Garage_2_0.Models.Enums;
 using Garage_2_0.Models.ViewModels.Common;
 using Garage_2_0.Models.ViewModels.Vehicle;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.Json;
 
 namespace Garage_2_0.Controllers
 {
     public class VehicleController(
         IConfiguration configuration,
+        ILogger<VehicleController> logger,
         IRepository<Garage> garageRepository,
-        IRepository<ParkedVehicle> vehicleRepository) : Controller
+        IRepository<ParkingSpot> parkingSpotRepository,
+        IRepository<Vehicle> vehicleRepository) : Controller
     {
+        private readonly ILogger _logger = logger;
         private readonly int _hourlyRate = configuration.GetValue<int>("GarageSettings:HourlyRate");
         private readonly IRepository<Garage> _garageRepository = garageRepository;
-        private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
+        private readonly IRepository<ParkingSpot> _parkingSpotRepository = parkingSpotRepository;
+        private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
+        private readonly SpotAllocationRules _spotAllocationRules = new();
 
         public async Task<IActionResult> Index(AlertViewModel? alert, VehicleType? selectedVehicleType, string? regNumber)
         {
@@ -32,10 +37,10 @@ namespace Garage_2_0.Controllers
                 vehicles = vehicles.Where(m => m.RegistrationNumber!.Contains(regNumber));
             }
 
-            var viewModel = new IndexParkedVehicleViewModel();
-
-            viewModel.ParkedVehicles = vehicles
-                    .Select(v => new ParkedVehicleSlimViewModel
+            var viewModel = new VehicleIndexViewModel
+            {
+                ParkedVehicles = vehicles
+                    .Select(v => new VehicleSlimViewModel
                     {
                         Id = v.Id,
                         RegistrationNumber = v.RegistrationNumber,
@@ -43,70 +48,94 @@ namespace Garage_2_0.Controllers
                         Brand = v.Brand,
                         RegisteredAt = v.RegisteredAt,
                         Color = v.Color,
-                    }).ToList();
+                        ParkingSpotIds = AssembleSpotIdString([.. _parkingSpotRepository.GetManyToManyRelation(v.Id)])
+                    }).ToList()
+            };
 
-            viewModel.Alert = alert;
+            if (alert is not null)
+            {
+                viewModel.Alert = alert;
+            }
 
             return View(viewModel);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var result = await _vehicleRepository.Find(v => v.Id == id);
-            var model = result.Select(v => new ParkedVehicleViewModel
+            var vehicle = (await _vehicleRepository.Find(v => v.Id == id)).Single();
+            if (vehicle is null)
             {
-                Id = v.Id,
-                Brand = v.Brand,
-                Color = v.Color,
-                Model = v.Model,
-                RegisteredAt = v.RegisteredAt,
-                RegistrationNumber = v.RegistrationNumber,
-                Type = v.Type,
-                Wheels = v.Wheels
-            }).First();
+                _logger.LogError("{Message}", $"Could not find vehicle with ID [{id}]");
+                return NotFound();
+            }
 
-            return View(model);
+            VehicleViewModel viewModel = new()
+            {
+                Id = vehicle.Id,
+                Brand = vehicle.Brand,
+                Color = vehicle.Color,
+                Model = vehicle.Model,
+                RegisteredAt = vehicle.RegisteredAt,
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Type = vehicle.Type,
+                Wheels = vehicle.Wheels
+            };
+
+            return View(viewModel);
         }
-
         public async Task<IActionResult> Create()
         {
-            var viewModel = new CreateParkedVehicleViewModel();
-            viewModel.Garages = await GetGarageSelectOptions();
+            VehicleCreateViewModel viewModel = new()
+            {
+                Garages = await GetGarageSelectOptions()
+            };
 
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateParkedVehicleViewModel viewModel)
+        public async Task<IActionResult> Create(VehicleCreateViewModel viewModel)
         {
-            viewModel.Garages = await GetGarageSelectOptions();
+            int maxOccupied = _spotAllocationRules.Collection[viewModel.Type].MaxOccupied;
+            int requiredSpotCount = _spotAllocationRules.Collection[viewModel.Type].RequiredSpotCount;
+
+            var garageSpots = await _parkingSpotRepository.Find(s => s.GarageId == viewModel.GarageId);
+            var freeSpots = GetSpots(garageSpots, maxOccupied, requiredSpotCount, viewModel.Type);
+
+            if (!ValidSpotSequence(freeSpots))
+            {
+                ModelState.AddModelError("InvalidSpotSequence", $"Not enough spots for vehicle type (Required amount: {requiredSpotCount})");
+            }
+
+            if (freeSpots.Count() < requiredSpotCount)
+            {
+                ModelState.AddModelError("GarageFull", "Garage is full");
+            }
 
             if (ModelState.IsValid)
             {
                 if (await _vehicleRepository.Any(v => v.RegistrationNumber == viewModel.RegistrationNumber))
                 {
-                    ModelState.AddModelError("RegistrationNumber", "Registreringsnumret finns redan, vänligen ange ett annat nummer.");
+                    ModelState.AddModelError("RegistrationNumber", $"Vehicle with {viewModel.RegistrationNumber} already in garage");
                     return View(viewModel);
                 }
-                var vehicle = new ParkedVehicle
+
+                Vehicle vehicle = new()
                 {
                     RegistrationNumber = viewModel.RegistrationNumber!,
                     Type = viewModel.Type,
                     Brand = viewModel.Brand!,
                     Model = viewModel.Model!,
                     Wheels = viewModel.Wheels,
-                    RegisteredAt = viewModel.RegisteredAt,
                     Color = viewModel.Color
                 };
 
-                vehicle.RegisteredAt = DateTime.Now;
-
-                var garage = (await _garageRepository.Find(g => g.Id == viewModel.GarageId)).Single();
-                if (garage is not null)
+                foreach (var spot in freeSpots)
                 {
-                    vehicle.GarageId = garage.Id;
-                    vehicle.Garage = garage;
+                    spot.ContainsVehicleType = vehicle.Type;
+                    spot.Vehicles.Add(vehicle);
+                    vehicle.ParkingSpots.Add(spot);
                 }
 
                 var parkedVehicle = await _vehicleRepository.Create(vehicle);
@@ -132,7 +161,7 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            CreateParkedVehicleViewModel viewModel = new()
+            VehicleCreateViewModel viewModel = new()
             {
                 Id = vehicle.Id,
                 RegistrationNumber = vehicle.RegistrationNumber,
@@ -150,7 +179,7 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CreateParkedVehicleViewModel viewModel)
+        public async Task<IActionResult> Edit(int id, VehicleCreateViewModel viewModel)
         {
             if (id != viewModel.Id)
             {
@@ -181,27 +210,40 @@ namespace Garage_2_0.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Checkout(int id)
+        public async Task<IActionResult> Checkout(int? id)
         {
-            var removedVehicle = await _vehicleRepository.Delete(id);
 
-            if (removedVehicle is not null)
+            if (id is null)
             {
+                _logger.LogError("{Message}", $"garage with ID [{id}] not found");
+                return NotFound();
+            }
+
+            var relatedSpots = _parkingSpotRepository.GetManyToManyRelation((int)id).ToList();
+            var vehicleToDelete = await _vehicleRepository.Delete((int)id);
+
+            if (vehicleToDelete is not null)
+            {
+                foreach (var relatedSpot in relatedSpots)
+                {
+                    relatedSpot.ContainsVehicleType = null;
+                    await _parkingSpotRepository.Update(relatedSpot);
+                }
                 var viewModel = new CheckoutVehicleViewModel
                 {
                     CheckoutAt = DateTime.Now,
-                    Vehicle = new ParkedVehicleSlimViewModel
+                    Vehicle = new VehicleSlimViewModel
                     {
-                        Id = removedVehicle.Id,
-                        RegisteredAt = removedVehicle.RegisteredAt,
-                        RegistrationNumber = removedVehicle.RegistrationNumber,
-                        Brand = removedVehicle.Brand,
-                        Color = removedVehicle.Color,
-                        Type = removedVehicle.Type,
+                        Id = vehicleToDelete.Id,
+                        RegisteredAt = vehicleToDelete.RegisteredAt,
+                        RegistrationNumber = vehicleToDelete.RegistrationNumber,
+                        Brand = vehicleToDelete.Brand,
+                        Color = vehicleToDelete.Color,
+                        Type = vehicleToDelete.Type,
                     },
-                    ParkingPeriod = DateTime.Now - removedVehicle.RegisteredAt,
+                    ParkingPeriod = DateTime.Now - vehicleToDelete.RegisteredAt,
                     HourlyRate = _hourlyRate,
-                    TotalParkingCost = (DateTime.Now - removedVehicle.RegisteredAt).Hours * _hourlyRate
+                    TotalParkingCost = (DateTime.Now - vehicleToDelete.RegisteredAt).Hours * _hourlyRate
                 };
 
                 return View(viewModel);
@@ -209,30 +251,34 @@ namespace Garage_2_0.Controllers
 
             return View();
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult DownloadCheckoutReceipt(CheckoutVehicleViewModel viewModel)
+        
+        private static string AssembleSpotIdString(ICollection<ParkingSpot> spots)
         {
-            if (!ModelState.IsValid)
+            return string.Join(", ", spots.Select(s => s.Id).ToArray());
+        }
+
+        private IEnumerable<ParkingSpot> GetSpots(IEnumerable<ParkingSpot> garageSpots,
+                                          int maxOccupied,
+                                          int requiredSpotCount,
+                                          VehicleType vehicleType)
+        {
+            return garageSpots
+                .Where(spot => _vehicleRepository.GetManyToManyRelation(spot.Id).Count() <= maxOccupied)
+                .Where(spot => spot.ContainsVehicleType == vehicleType || spot.ContainsVehicleType == null)
+                .Take(requiredSpotCount);
+        }
+
+        private static bool ValidSpotSequence(IEnumerable<ParkingSpot> freeSpots)
+        {
+            for (int i = 0; i < freeSpots.Count() - 1; i++)
             {
-                return BadRequest();
+                if (freeSpots.ElementAt(i + 1).Id - freeSpots.ElementAt(i).Id != 1)
+                {
+                    return false;
+                }
             }
-
-            string json = JsonSerializer.Serialize(viewModel);
-            System.IO.File.WriteAllText(@"C:\", json);
-
-            return View();
+            return true;
         }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await _vehicleRepository.Delete(id);
-            return RedirectToAction(nameof(Index));
-        }
-
         private async Task<List<SelectListItem>> GetGarageSelectOptions()
         {
             var garages = await _garageRepository.All();

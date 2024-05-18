@@ -1,8 +1,8 @@
 ﻿using Garage_2_0.Models;
+using Garage_2_0.Models.ViewModels;
 using Garage_2_0.Models.ViewModels.Garage;
 using Garage_2_0.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2_0.Controllers
 {
@@ -19,7 +19,7 @@ namespace Garage_2_0.Controllers
             {
                 Id = g.Id,
                 Name = g.Name,
-                MaxCapacity = g.MaxCapacity
+                ParkingSpotCount = g.ParkingSpotCount
             });
 
             return View(model);
@@ -43,7 +43,7 @@ namespace Garage_2_0.Controllers
             {
                 Id = garage.Id,
                 Name = garage.Name,
-                MaxCapacity = garage.MaxCapacity
+                ParkingSpotCount = garage.ParkingSpotCount
             };
 
             return View(garageViewModel);
@@ -57,10 +57,28 @@ namespace Garage_2_0.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Garage garage)
+        public async Task<IActionResult> Create(GarageViewModel viewModel)
         {
-            var createdGarage = await _repository.Create(garage);
-            return View(createdGarage);
+            var garageToCreate = new Garage()
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                ParkingSpotCount = viewModel.ParkingSpotCount
+            };
+
+            for (int i = 0; i < garageToCreate.ParkingSpotCount; i++)
+            {
+                garageToCreate.ParkingSpots.Add(new ParkingSpot());
+            };
+
+            var createdGarage = await _repository.Create(garageToCreate);
+
+            if (createdGarage is null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // use GarageDetailedViewModel
@@ -96,8 +114,8 @@ namespace Garage_2_0.Controllers
                 return NotFound();
             }
 
-            garage.Name = viewModel.Name;
-            garage.MaxCapacity = viewModel.MaxCapacity;
+            garage.Name = viewModel.Name!;
+            garage.ParkingSpotCount = viewModel.ParkingSpotCount;
 
             await _repository.Update(garage);
             return RedirectToAction(nameof(Index));

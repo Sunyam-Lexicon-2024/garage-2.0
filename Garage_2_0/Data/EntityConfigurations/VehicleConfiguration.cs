@@ -3,17 +3,15 @@ using Garage_2_0.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Garage_2_0.Data.EntityConfigurations
-{
-    public class ParkedVehicleConfiguration : IEntityTypeConfiguration<ParkedVehicle>
-    {
-        public void Configure(EntityTypeBuilder<ParkedVehicle> builder)
-        {
-            builder.ToTable("ParkedVehicle");
+namespace Garage_2_0.Data.EntityConfigurations;
 
-            var vehicles = new List<ParkedVehicle>
+public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
+{
+    public void Configure(EntityTypeBuilder<Vehicle> entity)
+    {
+        entity.HasData(new List<Vehicle>
             {
-                new ParkedVehicle
+                new()
                 {
                     Id = 1,
                     GarageId = 1,
@@ -22,10 +20,9 @@ namespace Garage_2_0.Data.EntityConfigurations
                     Brand = "Volkswagen",
                     Model = "Unknown",
                     Wheels = 4,
-                    RegisteredAt = DateTime.Now,
-                    Color = Color.Purple
+                    Color = Color.Purple,
                 },
-                new ParkedVehicle
+                new()
                 {
                     Id = 2,
                     GarageId = 1,
@@ -34,10 +31,9 @@ namespace Garage_2_0.Data.EntityConfigurations
                     Brand = "Saab",
                     Model = "Unknown",
                     Wheels = 4,
-                    RegisteredAt = DateTime.Now,
-                    Color = Color.Yellow
+                    Color = Color.Yellow,
                 },
-                new ParkedVehicle
+                new()
                 {
                     Id = 3,
                     GarageId = 1,
@@ -46,11 +42,9 @@ namespace Garage_2_0.Data.EntityConfigurations
                     Brand = "Volvo",
                     Model = "Unknown",
                     Wheels = 4,
-                    RegisteredAt = DateTime.Now,
-                    Color = Color.Blue
+                    Color = Color.Blue,
                 },
-                new ParkedVehicle
-                {
+                new() {
                     Id = 4,
                     GarageId = 1,
                     RegistrationNumber = "GBO781",
@@ -58,10 +52,9 @@ namespace Garage_2_0.Data.EntityConfigurations
                     Brand = "Audi",
                     Model = "Unknown",
                     Wheels = 4,
-                    RegisteredAt = DateTime.Now,
-                    Color = Color.Black
+                    Color = Color.Black,
                 },
-                new ParkedVehicle
+                new()
                 {
                     Id = 5,
                     GarageId = 1,
@@ -70,12 +63,9 @@ namespace Garage_2_0.Data.EntityConfigurations
                     Brand = "Toyota",
                     Model = "Unknown",
                     Wheels = 4,
-                    RegisteredAt = DateTime.Now,
-                    Color = Color.Green
+                    Color = Color.Green,
                 },
-            };
+            });
 
-            builder.HasData(vehicles);
-        }
     }
 }

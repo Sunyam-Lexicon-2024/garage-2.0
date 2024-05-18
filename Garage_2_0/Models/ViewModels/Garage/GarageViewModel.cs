@@ -1,9 +1,12 @@
-﻿namespace Garage_2_0.Models.ViewModels.Garage
+﻿using System.ComponentModel;
+
+namespace Garage_2_0.Models.ViewModels
 {
     public class GarageViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public int MaxCapacity { get; set; }
+        [DisplayName("Parking Spot Count")]
+        public int ParkingSpotCount { get; set; }
     }
 }

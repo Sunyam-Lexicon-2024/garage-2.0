@@ -6,6 +6,6 @@
         public decimal TotalParkingCost { get; set; }
         public DateTime CheckoutAt { get; set; }
         public TimeSpan ParkingPeriod { get; set; }
-        public ParkedVehicleSlimViewModel Vehicle { get; set; } = default!;
+        public VehicleSlimViewModel Vehicle { get; set; } = default!;
     }
 }

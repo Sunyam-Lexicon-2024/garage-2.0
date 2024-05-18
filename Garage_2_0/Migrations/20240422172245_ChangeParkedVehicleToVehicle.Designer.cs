@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace garage_2._0.Migrations
 {
     [DbContext(typeof(GarageDbContext))]
-    [Migration("20240423063555_SeedData")]
-    partial class SeedData
+    [Migration("20240422172245_ChangeParkedVehicleToVehicle")]
+    partial class ChangeParkedVehicleToVehicle
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace garage_2._0.Migrations
 
             modelBuilder.Entity("Garage_2_0.Models.Garage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("MaxCapacity")
                         .HasColumnType("int");
@@ -40,32 +40,20 @@ namespace garage_2._0.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("Garage", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            ID = 1,
                             MaxCapacity = 50,
-                            Name = "Garage One"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MaxCapacity = 100,
-                            Name = "Garage Two"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            MaxCapacity = 25,
-                            Name = "Garage Three"
+                            Name = "Default Garage One"
                         });
                 });
 
-            modelBuilder.Entity("Garage_2_0.Models.ParkedVehicle", b =>
+            modelBuilder.Entity("Garage_2_0.Models.Vehicle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +92,7 @@ namespace garage_2._0.Migrations
 
                     b.HasIndex("GarageId");
 
-                    b.ToTable("ParkedVehicle", (string)null);
+                    b.ToTable("Vehicle", (string)null);
 
                     b.HasData(
                         new
@@ -114,7 +102,7 @@ namespace garage_2._0.Migrations
                             Color = 4,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 23, 8, 35, 53, 283, DateTimeKind.Local).AddTicks(1288),
+                            RegisteredAt = new DateTime(2024, 4, 22, 19, 22, 44, 417, DateTimeKind.Local).AddTicks(8816),
                             RegistrationNumber = "FPD941",
                             Type = 0,
                             Wheels = 4
@@ -126,7 +114,7 @@ namespace garage_2._0.Migrations
                             Color = 1,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 23, 8, 35, 53, 283, DateTimeKind.Local).AddTicks(1359),
+                            RegisteredAt = new DateTime(2024, 4, 22, 19, 22, 44, 417, DateTimeKind.Local).AddTicks(8869),
                             RegistrationNumber = "CLQ415",
                             Type = 0,
                             Wheels = 4
@@ -138,7 +126,7 @@ namespace garage_2._0.Migrations
                             Color = 2,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 23, 8, 35, 53, 283, DateTimeKind.Local).AddTicks(1364),
+                            RegisteredAt = new DateTime(2024, 4, 22, 19, 22, 44, 417, DateTimeKind.Local).AddTicks(8872),
                             RegistrationNumber = "YHV901",
                             Type = 0,
                             Wheels = 4
@@ -150,7 +138,7 @@ namespace garage_2._0.Migrations
                             Color = 7,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 23, 8, 35, 53, 283, DateTimeKind.Local).AddTicks(1367),
+                            RegisteredAt = new DateTime(2024, 4, 22, 19, 22, 44, 417, DateTimeKind.Local).AddTicks(8875),
                             RegistrationNumber = "GBO781",
                             Type = 0,
                             Wheels = 4
@@ -162,14 +150,14 @@ namespace garage_2._0.Migrations
                             Color = 0,
                             GarageId = 1,
                             Model = "Unknown",
-                            RegisteredAt = new DateTime(2024, 4, 23, 8, 35, 53, 283, DateTimeKind.Local).AddTicks(1371),
+                            RegisteredAt = new DateTime(2024, 4, 22, 19, 22, 44, 417, DateTimeKind.Local).AddTicks(8878),
                             RegistrationNumber = "JRC132",
                             Type = 0,
                             Wheels = 4
                         });
                 });
 
-            modelBuilder.Entity("Garage_2_0.Models.ParkedVehicle", b =>
+            modelBuilder.Entity("Garage_2_0.Models.Vehicle", b =>
                 {
                     b.HasOne("Garage_2_0.Models.Garage", "Garage")
                         .WithMany("ParkedVehicles")

@@ -10,10 +10,10 @@ namespace Garage_2._0.Web.Controllers;
 
 public class StatsController(IConfiguration configuration,
                             ILogger<StatsController> logger,
-                            IRepository<ParkedVehicle> vehicleRepository
+                            IRepository<Vehicle> vehicleRepository
                             ) : Controller
 {
-    private readonly IRepository<ParkedVehicle> _vehicleRepository = vehicleRepository;
+    private readonly IRepository<Vehicle> _vehicleRepository = vehicleRepository;
     private readonly int _hourlyRate = configuration.GetValue<int>("GarageSettings:HourlyRate");
     private readonly ILogger<StatsController> _logger = logger;
 
@@ -30,7 +30,7 @@ public class StatsController(IConfiguration configuration,
         return View(viewModel);
     }
 
-    private static Dictionary<VehicleType, int> CalculateVehiclesRegistered(IEnumerable<ParkedVehicle> vehicles)
+    private static Dictionary<VehicleType, int> CalculateVehiclesRegistered(IEnumerable<Vehicle> vehicles)
     {
         Dictionary<VehicleType, int> vehicleCountList = new() {
             {VehicleType.Car, vehicles.Where(v => v.Type == VehicleType.Car).Count()},
@@ -43,7 +43,7 @@ public class StatsController(IConfiguration configuration,
         return vehicleCountList;
     }
 
-    private int CalculateTotalRevenue(IEnumerable<ParkedVehicle> vehicles)
+    private int CalculateTotalRevenue(IEnumerable<Vehicle> vehicles)
     {
         int total = 0;
         foreach (var v in vehicles)

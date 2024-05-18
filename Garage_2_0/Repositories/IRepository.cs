@@ -10,5 +10,5 @@ public interface IRepository<T> where T : class
     public Task<T> Update(T entity);
     public Task<T?> Delete(int id);
     public Task<bool> Any(Expression<Func<T, bool>> predicate);
-    
+    public IQueryable<T> GetManyToManyRelation(int id);
 }

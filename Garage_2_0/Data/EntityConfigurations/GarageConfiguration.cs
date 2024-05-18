@@ -8,32 +8,26 @@ namespace Garage_2_0.Data.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Garage> builder)
         {
-            builder.ToTable("Garage");
 
-            var garages = new List<Garage>
+            Garage[] garages = [
+
+            new()
             {
-                new Garage
-                {
-                    Id = 1,
-                    Name = "Garage One",
-                    MaxCapacity = 50
-                },
-                new Garage
-                {
-                    Id = 2,
-                    Name = "Garage Two",
-                    MaxCapacity = 100
-                },
-                new Garage
-                {
-                    Id = 3,
-                    Name = "Garage Three",
-                    MaxCapacity = 25
-                },
-            };
+                Id = 1,
+                Name = "Default Garage 1",
+                ParkingSpotCount = 5
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Default Garage 2",
+                ParkingSpotCount = 5
+            },
 
+            ];
 
             builder.HasData(garages);
         }
     }
 }
+

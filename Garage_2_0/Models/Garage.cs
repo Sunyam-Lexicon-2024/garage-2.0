@@ -2,9 +2,10 @@
 {
     public class Garage
     {
+        public Garage() => ParkingSpots = [];
         public int Id { get; set; }
         public required string Name { get; set; }
-        public required int MaxCapacity { get; set; }
-        public ICollection<ParkedVehicle> ParkedVehicles { get; } = [];
+        public required int ParkingSpotCount { get; set; }
+        public ICollection<ParkingSpot> ParkingSpots { get; } = [];
     }
 }
